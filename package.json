@@ -1,0 +1,18 @@
+{
+  "name": "employee-scheduling-project",
+  "private": true,
+  "version": "1.0.0",
+  "description": "This project helps employee to add/change the shift and employer can adjust the schedule if needed.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "backend": "npm run dev --prefix backend",
+    "frontend": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "setup": "npm install --prefix backend && npm install --prefix frontend",
+    "postinstall": "npm run setup"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

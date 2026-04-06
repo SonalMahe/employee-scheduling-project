@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  EMPLOYER
+  EMPLOYEE
+}
+
+enum ShiftType {
+  MORNING
+  AFTERNOON
+  NIGHT
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  password String
+  role     Role
+  createdAt DateTime @default(now())
+  employee Employee?
+}
+
+model Employee {
+  id        Int       @id @default(autoincrement())
+  name      String
+  userId    Int       @unique
+  user      User      @relation(fields: [userId], references: [id])
+  availabilities  Availability[]
+  scheduleEntries ScheduleEntry[]
+}
+
+model Shift {
+  id   Int       @id @default(autoincrement())
+  name ShiftType @unique
+  availabilities  Availability[]
+  scheduleEntries ScheduleEntry[]
+}
+
+model Availability {
+  id         Int       @id @default(autoincrement())
+  employeeId Int
+  shiftId    Int
+  dayOfWeek  String    // "monday" | "tuesday" etc.
+  available  Boolean   @default(true)
+  updatedAt  DateTime  @updatedAt
+
+  employee   Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  shift      Shift     @relation(fields: [shiftId], references: [id])
+
+  // one record per employee + shift + day combo
+  @@unique([employeeId, shiftId, dayOfWeek])
+}
+
+model ScheduleEntry {
+  id         Int       @id @default(autoincrement())
+  employeeId Int
+  shiftId    Int
+  date       DateTime 
+  createdAt  DateTime  @default(now())
+
+  employee   Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  shift      Shift     @relation(fields: [shiftId], references: [id])
+
+  // one employee can only have one shift per day
+  @@unique([employeeId, shiftId, date])
+}
