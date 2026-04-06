@@ -20,12 +20,12 @@ const server = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
-server.on('error', (error) => {
-  if (error.code === 'EADDRINUSE') {
-    console.error(`Port ${PORT} is already in use. Set BACKEND_PORT to a free port and retry.`);
-  } else {
-    console.error('Backend failed to start:', error.message);
-  }
+// server.on('error', (error) => {
+//   if (error.code === 'EADDRINUSE') {
+//     console.error(`Port ${PORT} is already in use. Set BACKEND_PORT to a free port and retry.`);
+//   } else {
+//     console.error('Backend failed to start:', error.message);
+//   }
 
-  process.exit(1);
-});
+//   process.exit(1);
+// });
