@@ -1,6 +1,16 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { PrismaClient } from "@prisma/client";
+
+import auth from '../backend/routes/auth';
+import employees from './routes/employees';
+import schedule from './routes/schedule';  
+import availability from './routes/availability'; 
+
+
+
+const prisma = new PrismaClient();
 
 dotenv.config();
 
@@ -13,8 +23,13 @@ app.use(express.json());
 
 // Routes
 app.get('/', (req, res) => {
-  res.json({ message: 'Employee Scheduling API....' });
+  res.json({ message: 'Employee Scheduling API.' });
 });
+ app.use('/auth' , auth);
+app.use('/employees', employees);
+app.use('/schedules', schedule);
+app.use('/availabilities', availability);
+
 
 const server = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
