@@ -1,6 +1,8 @@
 import { Request, Response } from "express"
 import { loginService, getMeService } from "../services/auth.service"
 import { UserRole } from "../types/user.types"
+import "express-session";
+
 
 // ─────────────────────────────────────────
 // LOGIN

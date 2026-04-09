@@ -51,6 +51,25 @@ app.use("/employees", employeeRoutes)
 // app.use("/schedule", scheduleRoutes)
 // app.use("/availability", availabilityRoutes)
 
+
+
+// Optional: add a root route so browser doesn't show Cannot GET /
+app.get("/", (_req, res) => {
+  res.json({ message: "Employee Scheduling API is running ✅" })
+})
+
+// Prints all registered routes when server starts
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`)
+  console.log("\nRegistered routes:")
+  console.log("  POST /auth/login")
+  console.log("  POST /auth/logout")
+  console.log("  GET  /auth/me")
+  console.log("  GET  /employees")
+  console.log("  POST /employees")
+  console.log("  GET  /employees/:id")
+})
+
 // ── Start server ───────────────────────────
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)

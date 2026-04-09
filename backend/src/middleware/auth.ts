@@ -1,5 +1,6 @@
 
 import { Request, Response, NextFunction } from "express";
+import "express-session";
 
 // ─────────────────────────────────────────
 // Check if user is logged in at all
