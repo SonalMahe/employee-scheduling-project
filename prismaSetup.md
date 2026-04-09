@@ -1,64 +1,60 @@
-How to set up Prisma 7 with Express and TypeScript
-1. Initialize the project
+
+      #  Setup Prisma with Express & TypeScript
+
+##  Overview
+
+This guide explains how to set up a **TypeScript backend** using:
+
+* Node.js + Express
+* Prisma ORM (with PostgreSQL & Accelerate)
+* ESLint + Prettier
+
+---
+
+##  1. Initialize Project
+
+```bash
 npm init -y
-npm install express dotenv @prisma/client@6.17 @prisma6.17 
+```
 
-npm install -D typescript@5 ts-node tsx nodemon @types/node @types/express eslint @typescript-eslint/eslint-plugin prettier eslint-config-prettier @types/node
+### Install dependencies
 
+```bash
+npm install express dotenv @prisma/client prisma zod cors bcryptjs express-session connect-pg-simple
+```
 
-2. Configure package.json--
+### Install dev dependencies
+
+```bash
+npm install -D typescript tsx ts-node nodemon @types/node @types/express @types/express-session @types/bcryptjs @types/cors eslint @typescript-eslint/eslint-plugin prettier eslint-config-prettier
+```
+
+---
+
+##  2. Configure `package.json`
+
+```json
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.ts",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon index.ts",
-    "start": "node index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.ts",
+    "start": "node dist/index.js",
     "lint": "eslint .",
     "format": "prettier --write .",
     "eslint:fix": "eslint . --fix"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "dependencies": {
-    "@prisma/client": "^6.17.0",
-    "bcryptjs": "^3.0.3",
-    "connect-pg-simple": "^10.0.0",
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.1",
-    "express": "^5.2.1",
-    "express-session": "^1.19.0",
-    "prisma": "^6.17.0",
-    "zod": "^4.3.6"
-  },
-  "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
-    "@types/connect-pg-simple": "^7.0.3",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/express-session": "^1.18.2",
-    "eslint": "^10.2.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
-    "nodemon": "^3.1.10",
-    "prettier": "^3.8.1",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.21.0",
-    "typescript": "^6.0.2"
   }
 }
+```
 
-2. Set up ESLint
-Create a new at the root eslint.config.js:
+---
 
-// eslint.config.mjs
+## 🧹 3. Setup ESLint
+
+Create: `eslint.config.mjs`
+
+```js
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import prettier from "eslint-config-prettier";
@@ -67,11 +63,9 @@ export default tseslint.config(
   {
     ignores: ["dist/**", "node_modules/**"],
   },
-
   js.configs.recommended,
-
   ...tseslint.configs.recommendedTypeChecked,
-
+  prettier,
   {
     files: ["src/**/*.ts"],
     languageOptions: {
@@ -82,42 +76,32 @@ export default tseslint.config(
       },
     },
     rules: {
-      // No implicit/unsafe any style
       "@typescript-eslint/no-explicit-any": "error",
-
-      // Consistent arrow functions
       "func-style": ["error", "expression", { allowArrowFunctions: true }],
       "prefer-arrow-callback": "error",
-
-      // No unused vars
       "@typescript-eslint/no-unused-vars": [
         "error",
-        { argsIgnorePattern: "^_" },
+        { argsIgnorePattern: "^_" }
       ],
-
-      // Strict equality
       eqeqeq: ["error", "always"],
-
-      // Async/await safety
       "@typescript-eslint/no-floating-promises": "error",
-      "@typescript-eslint/no-misused-promises": "error",
-
-      // Naming style
-      "@typescript-eslint/naming-convention": [
-        "error",
-        {
-          selector: "default",
-          format: ["camelCase", "PascalCase", "UPPER_CASE"],
-          leadingUnderscore: "allow",
-        },
-        { selector: "typeLike", format: ["PascalCase"] },
-      ],
-    },
-  },
-
+      "@typescript-eslint/no-misused-promises": "error"
+    }
+  }
 );
-3. Configure tsconfig.json
+```
+
+---
+
+##  4. Configure TypeScript
+
+```bash
 npx tsc --init
+```
+
+Update `tsconfig.json`:
+
+```json
 {
   "compilerOptions": {
     "rootDir": "./src",
@@ -127,94 +111,184 @@ npx tsc --init
     "moduleResolution": "bundler",
     "types": ["node"],
     "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
     "strict": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
     "skipLibCheck": true
-  }
+  },
   "include": ["src/**/*"]
 }
-Create src folder at the root
+```
 
-npx tsc
+---
 
-4. Set up Prisma
+##  5. Create Project Structure
+
+```bash
+mkdir src
+```
+
+---
+
+##  6. Setup Prisma
+
+```bash
 npx prisma init
-Then go to https://console.prisma.io, create a new project, select Prisma Postgres and enable Accelerate.
+```
 
-Copy the connection string into your .env:
+---
 
-DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=your_key_here"
+##  7. Configure Database
 
-5. Write your schema
-In prisma/schema.prisma:
+Go to Prisma Console and create a PostgreSQL database.
 
+Add `.env`:
+
+```env
+DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=YOUR_KEY"
+```
+
+---
+
+##  8. Define Schema
+
+`prisma/schema.prisma`
+
+```prisma
 generator client {
-  provider            = "prisma-client-js"  
-  importFileExtension = "ts"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
 }
+```
 
-6. Configure prisma.config.ts
-import "dotenv/config"
-import { defineConfig, env } from "prisma/config"
+---
+
+##  9. Configure Prisma (New Way)
+
+Create `prisma.config.ts`:
+
+```ts
+import "dotenv/config";
+import { defineConfig, env } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
-    seed: "tsx prisma/seed.ts",
+    seed: "tsx prisma/seed.ts"
   },
   datasource: {
-    url: env("DATABASE_URL"),
-  },
-})
-7. Run the migration
-npx prisma migrate dev --name create_table
+    url: env("DATABASE_URL")
+  }
+});
+```
 
-8. Generate the Prisma client
+---
+
+##  10. Run Migration
+
+```bash
+npx prisma migrate dev --name init
+```
+
+---
+
+##  11. Generate Prisma Client
+
+```bash
 npx prisma generate
+```
 
-9. Write the seed file
-In prisma/seed.ts:
+---
 
-import "dotenv/config"
-import { PrismaClient } from "../src/generated/prisma/client.js"
-import { withAccelerate } from "@prisma/extension-accelerate"
+##  12. Seed Database
 
-const prisma = new PrismaClient({
-  accelerateUrl: process.env.DATABASE_URL!,
-}).$extends(withAccelerate())
+Create: `prisma/seed.ts`
 
-const seed = async () {
-  await 
+```ts
+import "dotenv/config";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+async function seed() {
+  await prisma.user.create({
+    data: {
+      email: "test@example.com"
+    }
+  });
 }
 
-seed().then(() => prisma.$disconnect())
-Then run:
+seed()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect());
+```
+
+Run seed:
+
+```bash
 npx prisma db seed
+```
 
+---
 
-10. Build the Express API
-In src/index.ts import PrismaClient from the generated path:
+##  13. Build Express Server
 
-import { PrismaClient } from "./generated/prisma/client.js"
-import { withAccelerate } from "@prisma/extension-accelerate"
-import { z } from "zod"
+Create: `src/index.ts`
 
-const prisma = new PrismaClient({
-  accelerateUrl: process.env.DATABASE_URL!,
-}).$extends(withAccelerate())
-Then add your routes and start the server with:
+```ts
+import express from "express";
+import { PrismaClient } from "@prisma/client";
 
+const app = express();
+const prisma = new PrismaClient();
+
+app.use(express.json());
+
+app.get("/", async (_req, res) => {
+  const users = await prisma.user.findMany();
+  res.json(users);
+});
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
+```
+
+---
+
+##  14. Run Server
+
+```bash
 npm run dev
+```
+
+---
+
+## Final Result
+
+You now have:
+
+* ✔ TypeScript backend
+* ✔ Prisma ORM with PostgreSQL
+* ✔ Database migrations
+* ✔ Seed data
+* ✔ Express API running
+
+---
+
+##  Next Steps
+
+* Add authentication (JWT / session)
+* Create routes, controllers, services
+* Add validation with Zod
+* Connect frontend to API
+
+---
