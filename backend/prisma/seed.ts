@@ -77,7 +77,7 @@ async function seed() {
     },
   ]});
 
-  console.log("✅ Seed successful");
+  console.log("Seed successful");
 };
 
 seed()

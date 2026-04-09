@@ -3,10 +3,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { PrismaClient } from "@prisma/client";
 
-import auth from '../backend/routes/auth';
-import employees from './routes/employees';
-import schedule from './routes/schedule';  
-import availability from './routes/availability'; 
+import auth from './src/routes/auth';
+import employees from './src/routes/employees';
+import schedule from './src/routes/schedule';  
+import availability from './src/routes/availability'; 
 
 
 
@@ -25,7 +25,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.json({ message: 'Employee Scheduling API.' });
 });
- app.use('/auth' , auth);
+app.use('/auth' , auth);
 app.use('/employees', employees);
 app.use('/schedules', schedule);
 app.use('/availabilities', availability);
