@@ -1,15 +1,8 @@
-import React from 'react';
 import './App.css';
+import Login from './Components/Login';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Employee Scheduling System</h1>
-        <p>Welcome to the scheduling application</p>
-      </header>
-    </div>
-  );
+  return <Login />;
 }
 
 export default App;
