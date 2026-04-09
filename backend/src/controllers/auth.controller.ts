@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import { loginService, getMeService } from "../services/auth.service"
+import { UserRole } from "../types/user.types"
 
 // ─────────────────────────────────────────
 // LOGIN
@@ -24,7 +25,7 @@ export async function login(
     // Save to session
     req.session.user = {
       id:         user.id,
-      role:       user.role,
+      role:       user.role as UserRole,
       name:       user.name,
       employeeId: user.employeeId
     }

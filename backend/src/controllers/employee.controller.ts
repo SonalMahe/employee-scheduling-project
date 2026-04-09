@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import bcrypt from "bcryptjs"
-import { prisma } from "../utils/prisma"
+import { prisma } from @prisma/client;
 
 // ─────────────────────────────────────────
 // GET ALL EMPLOYEES
@@ -37,14 +37,14 @@ export async function listEmployees(
 // ─────────────────────────────────────────
 // GET SINGLE EMPLOYEE
 // Employer only
-// GET /employees/:id
+// 1--GET /employees/:id
 // ─────────────────────────────────────────
 export async function getEmployee(
   req: Request,
   res: Response
 ): Promise<void> {
   try {
-    const id = parseInt(req.params.id)
+    const id = parseInt(req.params.id as string)
 
     // Check if id is a valid number
     if (isNaN(id)) {
@@ -85,7 +85,7 @@ export async function getEmployee(
 // ─────────────────────────────────────────
 // REGISTER NEW EMPLOYEE
 // Employer only
-// POST /employees
+// 2--POST /employees
 // ─────────────────────────────────────────
 export async function registerEmployee(
   req: Request,
@@ -166,6 +166,10 @@ export async function registerEmployee(
   }
 }
 
+
+
+//------Extra---------(Update,delete,getMyProfile )
+
 // ─────────────────────────────────────────
 // UPDATE EMPLOYEE
 // Employer only
@@ -175,7 +179,7 @@ export async function updateEmployee(
   req: Request,
   res: Response
 ): Promise<void> {
-  const id = parseInt(req.params.id)
+  const id = parseInt(req.params.id as string)
   const { name, loginCode } = req.body
 
   if (isNaN(id)) {
@@ -219,7 +223,7 @@ export async function deleteEmployee(
   req: Request,
   res: Response
 ): Promise<void> {
-  const id = parseInt(req.params.id)
+  const id = parseInt(req.params.id as string)
 
   if (isNaN(id)) {
     res.status(400).json({ error: "Invalid employee ID" })

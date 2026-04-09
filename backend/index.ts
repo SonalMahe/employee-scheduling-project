@@ -3,10 +3,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { PrismaClient } from "@prisma/client";
 
-import auth from './src/routes/auth';
-import employees from './src/routes/employees';
-import schedule from './src/routes/schedule';  
-import availability from './src/routes/availability'; 
+import auth from './src/routes/auth.routes';
+import employees from './src/routes/employees.routes';
+import schedule from './src/routes/schedule.routes';  
+import availability from './src/routes/availability.routes'; 
 
 
 
@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 });
 app.use('/auth' , auth);
 app.use('/employees', employees);
-app.use('/schedules', schedule);
+app.use('/schedule', schedule);
 app.use('/availabilities', availability);
 
 

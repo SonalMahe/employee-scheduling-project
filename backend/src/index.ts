@@ -6,8 +6,8 @@ import session from "express-session"
 import connectPgSimple from "connect-pg-simple"
 import cors from "cors"
 
-import authRoutes from "./routes/auth"
-import employeeRoutes from "./routes/employees"
+import authRoutes from "./routes/auth.routes"
+import employeeRoutes from "./routes/employees.routes"
 // import scheduleRoutes from "../routes/schedule"
 // import availabilityRoutes from "../routes/availability"
 
