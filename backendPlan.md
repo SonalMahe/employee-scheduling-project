@@ -38,6 +38,7 @@ src/
   services/        # Business logic
   middleware/      # Auth, validation, errors
   types/           # Shared TypeScript types
+  schema/          # Zod validation , error handling
 
 prisma/
   schema.prisma

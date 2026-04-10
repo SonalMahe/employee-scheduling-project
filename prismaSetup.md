@@ -1,5 +1,5 @@
 
-      #  Setup Prisma with Express & TypeScript
+       --------Setup Prisma with Express & TypeScript---------
 
 ##  Overview
 
@@ -50,7 +50,7 @@ npm install -D typescript tsx ts-node nodemon @types/node @types/express @types/
 
 ---
 
-## 🧹 3. Setup ESLint
+## 3. Setup ESLint
 
 Create: `eslint.config.mjs`
 

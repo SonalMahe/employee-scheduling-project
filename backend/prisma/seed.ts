@@ -64,7 +64,7 @@ async function seed() {
   }
   console.log("Employees created — loginCodes: 2001 to 2009")
 
-  console.log("🎉 Seed complete!")
+  console.log("Seed complete!")
 }
 
 seed()

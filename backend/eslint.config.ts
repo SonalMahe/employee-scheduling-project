@@ -1,23 +1,31 @@
 import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
-  { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"], languageOptions: { globals: globals.browser } },
-  tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
- ], {
-  rules: {
-      // No implicit/unsafe any style
+  {
+    ignores: ["node_modules/**", "dist/**"],
+  },
+
+  js.configs.recommended,
+
+  ...tseslint.configs.recommended,
+
+  {
+    files: ["**/*.ts"],
+    languageOptions: {
+      globals: globals.node,
+    },
+    rules: {
+      // No implicit/unsafe any
       "@typescript-eslint/no-explicit-any": "error",
 
-      // Consistent arrow functions
-      "func-style": ["error", "expression", { allowArrowFunctions: true }],
+      // Arrow functions
+      "func-style": ["error", "expression"],
       "prefer-arrow-callback": "error",
 
-      // No unused vars
+      // Unused vars
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_" },
@@ -26,23 +34,22 @@ export default defineConfig([
       // Strict equality
       eqeqeq: ["error", "always"],
 
-      // Async/await safety
+      // Async safety
       "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/no-misused-promises": "error",
 
-      // Naming style
+      // Naming convention
       "@typescript-eslint/naming-convention": [
         "error",
         {
           selector: "default",
           format: ["camelCase", "PascalCase", "UPPER_CASE"],
-          leadingUnderscore: "allow",
         },
-        { selector: "typeLike", format: ["PascalCase"] },
+        {
+          selector: "typeLike",
+          format: ["PascalCase"],
+        },
       ],
     },
   },
-
-) 
-
-
+]);

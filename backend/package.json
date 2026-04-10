@@ -30,6 +30,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/connect-pg-simple": "^7.0.3",
     "@types/cors": "^2.8.19",
@@ -38,10 +39,12 @@
     "eslint": "^10.2.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.4.0",
     "nodemon": "^3.1.10",
     "prettier": "^3.8.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.1"
   }
 }
