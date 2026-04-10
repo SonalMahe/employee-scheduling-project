@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./EmployeeList.css";
+
+// ✅ Type definition
+type Employee = {
+  id: number;
+  name: string;
+  email: string;
+};
 
 const EmployeeList = () => {
-  const navigate = useNavigate(); // inside component
+  const navigate = useNavigate();
 
-  const [employees, setEmployees] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     fetchEmployees();
@@ -26,7 +34,7 @@ const EmployeeList = () => {
         throw new Error("Failed to fetch employees");
       }
 
-      const data = await response.json();
+      const data: Employee[] = await response.json();
 
       setEmployees(data);
     } catch (err) {
@@ -37,20 +45,21 @@ const EmployeeList = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p className="loading">Loading...</p>;
+  if (error) return <p className="error">{error}</p>;
 
   return (
-    <div>
-      <h2>Employee List</h2>
+    <div className="container">
+      <h2 className="title">Employee List</h2>
 
-      {/*  Button INSIDE return */}
-      <button onClick={() => navigate("/schedule")}>Go to Schedule</button>
+      <button className="schedule-btn" onClick={() => navigate("/schedule")}>
+        Go to Schedule
+      </button>
 
       {employees.length === 0 ? (
-        <p>No employees found</p>
+        <p className="empty">No employees found</p>
       ) : (
-        <table border="1">
+        <table className="employee-table">
           <thead>
             <tr>
               <th>ID</th>
