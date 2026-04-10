@@ -71,7 +71,7 @@ function Login() {
           <p className="header-subtitle">Hotell & Konferens</p>
         </div>
         <h1 className="login-title">Employee Scheduling System</h1>
-        <p className="login-subtitle">Sign in to your account</p>
+        <p className="login-subtitle">Login into your account</p>
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
@@ -118,7 +118,7 @@ function Login() {
             className="login-button"
             disabled={loading}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
       </div>
