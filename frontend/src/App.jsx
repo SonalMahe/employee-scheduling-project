@@ -1,14 +1,18 @@
-import React from 'react';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
+import EmployeeList from "./Components/EmployeeList/EmployeeList";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
+    <BrowserRouter>
+      <div className="App">
         <h1>Employee Scheduling System</h1>
-        <p>Welcome to the scheduling application</p>
-      </header>
-    </div>
+
+        <Routes>
+          <Route path="/employees" element={<EmployeeList />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
