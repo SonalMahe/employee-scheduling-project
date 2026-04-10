@@ -1,12 +1,23 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { login, saveSession, loadSession } from '../../Api/api';
 import './Login.css';
 
 function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Skip login if already logged in
+  useEffect(() => {
+    const session = loadSession();
+    if (session?.role === "EMPLOYER") navigate("/employer");
+    else if (session?.role === "EMPLOYEE") navigate("/employee");
+    else if (session) navigate("/");
+  }, [navigate]);
 
   // Load saved email on component mount
   useEffect(() => {
@@ -17,30 +28,14 @@ function Login() {
     }
   }, []);
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.message || 'Login failed. Please try again.');
-        setLoading(false);
-        return;
-      }
+      const user = await login(email, password);
+      saveSession(user);
 
       // Handle remember me
       if (rememberMe) {
@@ -49,15 +44,12 @@ function Login() {
         localStorage.removeItem('rememberMe_email');
       }
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      
       setEmail('');
       setPassword('');
-
+      
+      navigate(user.role === "EMPLOYER" ? "/employer" : "/employee");
     } catch (err) {
-      setError('Network error. Please try again later.');
-      console.error('Login error:', err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
