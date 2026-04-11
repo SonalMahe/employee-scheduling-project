@@ -14,8 +14,8 @@ datasource db {
 }
 
 enum Role {
-  EMPLOYER
   EMPLOYEE
+  EMPLOYER
 }
 
 enum ShiftType {
@@ -24,56 +24,82 @@ enum ShiftType {
   NIGHT
 }
 
+enum Position {
+  WAITER
+  RUNNER
+  HEAD_WAITER
+  ADMIN
+  CHEF
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum AvailabilityStatus {
+  AVAILABLE   // willing to work this shift
+  UNAVAILABLE // cannot work this shift
+  PREFERRED   // specifically wants this shift
+}
+
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  password String
-  role     Role
-  createdAt DateTime @default(now())
-  employee Employee?
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  loginCode String    @unique
+  position  Position?
+  role      Role
+  photoUrl  String?
+  createdAt DateTime  @default(now())
+  employee  Employee?
 }
 
 model Employee {
-  id        Int       @id @default(autoincrement())
-  name      String
-  userId    Int       @unique
-  user      User      @relation(fields: [userId], references: [id])
+  id              Int             @id @default(autoincrement())
+  userId          Int             @unique
+  user            User            @relation(fields: [userId], references: [id])
   availabilities  Availability[]
   scheduleEntries ScheduleEntry[]
 }
 
 model Shift {
-  id   Int       @id @default(autoincrement())
-  name ShiftType @unique
+  id              Int             @id @default(autoincrement())
+  name            ShiftType       @unique
   availabilities  Availability[]
   scheduleEntries ScheduleEntry[]
 }
 
 model Availability {
-  id         Int       @id @default(autoincrement())
+  id         Int                @id @default(autoincrement())
   employeeId Int
   shiftId    Int
-  dayOfWeek  String    // "monday" | "tuesday" etc.
-  available  Boolean   @default(true)
-  updatedAt  DateTime  @updatedAt
+  dayOfWeek  DayOfWeek
+  status     AvailabilityStatus @default(UNAVAILABLE)
+  updatedAt  DateTime           @updatedAt
 
-  employee   Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  shift      Shift     @relation(fields: [shiftId], references: [id])
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  shift    Shift    @relation(fields: [shiftId], references: [id])
 
   // one record per employee + shift + day combo
   @@unique([employeeId, shiftId, dayOfWeek])
 }
 
 model ScheduleEntry {
-  id         Int       @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   employeeId Int
   shiftId    Int
-  date       DateTime 
-  createdAt  DateTime  @default(now())
+  date       DateTime @db.Date
+  createdAt  DateTime @default(now())
 
-  employee   Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  shift      Shift     @relation(fields: [shiftId], references: [id])
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  shift    Shift    @relation(fields: [shiftId], references: [id])
 
-  // one employee can only have one shift per day
-  @@unique([employeeId, shiftId, date])
+  // one employee can only be assigned one shift per day
+  @@unique([employeeId, date])
 }

@@ -1,24 +1,72 @@
-import { PrismaClient, Role, ShiftType } from "@prisma/client";
+import { PrismaClient, Role, Position } from "@prisma/client"
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 async function seed() {
-  await prisma.shift.createMany({
-    data: [
-      { name: ShiftType.MORNING },
-      { name: ShiftType.AFTERNOON },
-      { name: ShiftType.NIGHT },
-    ],
-    skipDuplicates: true,
-  });
 
+  // ── Step 1: Create Shifts ──────────────────────
+  const shifts = ["MORNING", "AFTERNOON", "NIGHT"]
+  for (const name of shifts) {
+    await prisma.shift.upsert({
+      where:  { name: name as any },
+      update: {},
+      create: { name: name as any }
+    })
+  }
+  console.log("Shifts created")
 
+  // ── Step 2: Create Employer ────────────────────
+  await prisma.user.upsert({
+    where:  { email: "sonal.maheshwari@sundsgarden.se" },
+    update: {},
+    create: {
+      name:      "Sonal Maheshwari",
+      email:     "sonal.maheshwari@sundsgarden.se",
+      loginCode: "2010",
+      position:  Position.ADMIN,
+      role:      Role.EMPLOYER
+      // ← no employee record for employer
+    }
+  })
+  console.log("Employer created — loginCode: 2010")
+
+  // ── Step 3: Create Employees ───────────────────
+  // Each one creates a User + linked Employee together
+  const employees = [
+    { name: "Hanna Persson",    email: "hanna.persson@sundsgarden.se",    loginCode: "2001", position: Position.WAITER  , photoUrl: "https://randomuser.me/api/portraits/women/0.jpg" },
+    { name: "Max Olsson",       email: "max.olsson@sundsgarden.se",       loginCode: "2002", position: Position.RUNNER , photoUrl: "https://randomuser.me/api/portraits/women/0.jpg"     },
+    { name: "Alia Lindberg",    email: "alia.lindberg@sundsgarden.se",    loginCode: "2003", position: Position.WAITER  , photoUrl: "https://randomuser.me/api/portraits/women/0.jpg"    },
+    { name: "Isak Norberg",     email: "isak.norberg@sundsgarden.se",     loginCode: "2004", position: Position.CHEF , photoUrl: "https://randomuser.me/api/portraits/women/0.jpg"       },
+    { name: "Tilda Åberg",      email: "tilda.aberg@sundsgarden.se",      loginCode: "2005", position: Position.RUNNER   , photoUrl: "https://randomuser.me/api/portraits/women/0.jpg"   },
+    { name: "Noah Ekström",     email: "noah.ekstrom@sundsgarden.se",     loginCode: "2006", position: Position.WAITER   , photoUrl: "https://randomuser.me/api/portraits/women/0.jpg"   },
+    { name: "Freja Holmberg",   email: "freja.holmberg@sundsgarden.se",   loginCode: "2007", position: Position.RUNNER      , photoUrl: "https://randomuser.me/api/portraits/women/0.jpg"      },
+    { name: "Axel Dahl",        email: "axel.dahl@sundsgarden.se",        loginCode: "2008", position: Position.HEAD_WAITER , photoUrl: "https://randomuser.me/api/portraits/women/0.jpg"        },
+    { name: "Nora Falk",        email: "nora.falk@sundsgarden.se",        loginCode: "2009", position: Position.WAITER      , photoUrl: "https://randomuser.me/api/portraits/women/0.jpg"      },
+  ]
+
+  for (const emp of employees) {
+    await prisma.user.upsert({
+      where:  { email: emp.email },
+      update: {},
+      create: {
+        name:      emp.name,
+        email:     emp.email,
+        loginCode: emp.loginCode,
+        position:  emp.position,
+        role:      Role.EMPLOYEE,
+        employee: {
+          create: {}  // ← creates Employee record linked to this User
+        }
+      }
+    })
+  }
+  console.log("Employees created — loginCodes: 2001 to 2009")
+
+  console.log("Seed complete!")
 }
 
 seed()
-  .catch((e) => {
-    console.error(e);
-  })
+  .catch(console.error)
   .finally(async () => {
-    await prisma.$disconnect();
-  });
+    await prisma.$disconnect()
+  })
