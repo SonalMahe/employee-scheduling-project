@@ -88,9 +88,7 @@ export async function registerEmployeeService(input: RegisterInput) {
       position:  input.position as any,
       role:      "EMPLOYEE",
       employee: {
-        create: {
-          name: input.name
-        }
+        create: {}
       }
     },
     include: {
@@ -124,14 +122,6 @@ export async function updateEmployeeService(id: number, input: UpdateInput) {
   if (!existing) {
     throw new Error("Employee not found")
   }
-
-  // Update name on Employee table
-  await prisma.employee.update({
-    where: { id },
-    data: {
-      ...(input.name && { name: input.name })
-    }
-  })
 
   // Update name, loginCode, position on User table
   const updatedUser = await prisma.user.update({

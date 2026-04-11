@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth';
-import { UpdateAvailabilitySchema } from '../schemas';
+import { UpdateAvailabilitySchema } from '../schema';
 import { getAvailability, updateAvailability } from '../services/availability.service';
 import { AppError } from '../middleware/errorHandlerMiddleware';
 

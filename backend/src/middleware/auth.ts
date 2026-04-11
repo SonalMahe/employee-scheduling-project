@@ -1,4 +1,3 @@
-
 import { Request, Response, NextFunction } from "express";
 import "express-session";
 
@@ -31,7 +30,7 @@ export function isEmployer(
     res.status(403).json({ error: "Employer access only." })
     return
   }
-  next() // ✅ is employer → continue
+  next() //is employer → continue
 }
 
 // ─────────────────────────────────────────
@@ -47,5 +46,5 @@ export function isEmployee(
     res.status(403).json({ error: "Employee access only." })
     return
   }
-  next() //  is employee → continue
+  next() // is employee → continue
 }
