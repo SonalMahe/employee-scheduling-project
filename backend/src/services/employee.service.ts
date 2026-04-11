@@ -18,7 +18,7 @@ export async function getAllEmployeesService() {
         }
       }
     },
-    orderBy: { name: "asc" }
+    orderBy: { user: { name: "asc" } }
   })
 }
 
@@ -152,10 +152,10 @@ export async function deleteEmployeeService(id: number) {
     throw new Error("Employee not found")
   }
 
-  // Deleting user also deletes employee via onDelete: Cascade
-  await prisma.user.delete({
-    where: { id: existing.userId }
-  })
+  // Delete Employee first (cascades to Availability + ScheduleEntry),
+  // then delete User — FK goes Employee → User, so order matters
+  await prisma.employee.delete({ where: { id } })
+  await prisma.user.delete({ where: { id: existing.userId } })
 }
 
 // ─────────────────────────────────────────
