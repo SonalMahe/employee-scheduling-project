@@ -1,28 +1,38 @@
 import { Request, Response, NextFunction } from "express";
 import "express-session";
+import { SessionUser } from "../types/session.d";
 
 // ─────────────────────────────────────────
-// Check if user is logged in at all
+// AuthRequest — extends Express Request with
+// req.user populated by authenticate middleware
 // ─────────────────────────────────────────
-export function verifySession(
-  req: Request,
+export interface AuthRequest extends Request {
+  user?: SessionUser
+}
+
+// ─────────────────────────────────────────
+// authenticate — verify session and attach
+// session user to req.user for controllers
+// ─────────────────────────────────────────
+export function authenticate(
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ): void {
-  // If no session user → not logged in
   if (!req.session.user) {
     res.status(401).json({ error: "Not logged in. Please log in first." })
     return
   }
-  next() // logged in → continue
+  req.user = req.session.user // attach for convenient access in controllers
+  next()
 }
 
 // ─────────────────────────────────────────
-// Check if logged in user is EMPLOYER
-// Always use AFTER verifySession
+// requireEmployer — employer access only
+// Always use AFTER authenticate
 // ─────────────────────────────────────────
-export function isEmployer(
-  req: Request,
+export function requireEmployer(
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ): void {
@@ -30,15 +40,15 @@ export function isEmployer(
     res.status(403).json({ error: "Employer access only." })
     return
   }
-  next() //is employer → continue
+  next()
 }
 
 // ─────────────────────────────────────────
-// Check if logged in user is EMPLOYEE
-// Always use AFTER verifySession
+// isEmployee — employee access only
+// Always use AFTER authenticate
 // ─────────────────────────────────────────
 export function isEmployee(
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ): void {
@@ -46,5 +56,5 @@ export function isEmployee(
     res.status(403).json({ error: "Employee access only." })
     return
   }
-  next() // is employee → continue
+  next()
 }
