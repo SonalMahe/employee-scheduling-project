@@ -13,7 +13,7 @@ import availabilityRoutes from "./routes/availability.routes"
 
 const app = express()
 const PgStore = connectPgSimple(session)
-const PORT = process.env.PORT ?? 3000
+const PORT = process.env.PORT ?? 5050
 
 // ── Middleware ─────────────────────────────
 app.use(express.json())
@@ -46,39 +46,32 @@ app.use(
 )
 
 // ── Routes ─────────────────────────────────
-app.use("/auth", authRoutes)
-app.use("/employees", employeeRoutes)
-app.use("/schedule", scheduleRoutes)
-app.use("/availability", availabilityRoutes)
+app.use("/api/v1/auth", authRoutes)
+app.use("/api/v1/employees", employeeRoutes)
+app.use("/api/v1/schedule", scheduleRoutes)
+app.use("/api/v1/availability", availabilityRoutes)
 
-
-
-// Optional: add a root route so browser doesn't show Cannot GET /
+// Health check
 app.get("/", (_req, res) => {
   res.json({ message: "Employee Scheduling API is running ✅" })
-})
-
-// Prints all registered routes when server starts
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`)
-  console.log("\nRegistered routes:")
-  console.log("  POST   /auth/login")
-  console.log("  POST   /auth/logout")
-  console.log("  GET    /auth/me")
-  console.log("  GET    /employees")
-  console.log("  POST   /employees")
-  console.log("  GET    /employees/:id")
-  console.log("  PUT    /employees/:id")
-  console.log("  DELETE /employees/:id")
-  console.log("  GET    /employees/me")
-  console.log("  GET    /availability/:employeeId")
-  console.log("  PUT    /availability/:employeeId")
-  console.log("  GET    /schedule")
-  console.log("  PUT    /schedule")
-  console.log("  DELETE /schedule/:id")
 })
 
 // ── Start server ───────────────────────────
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
+  console.log("\nRegistered routes:")
+  console.log("  POST   /api/v1/auth/login")
+  console.log("  POST   /api/v1/auth/logout")
+  console.log("  GET    /api/v1/auth/me")
+  console.log("  GET    /api/v1/employees")
+  console.log("  POST   /api/v1/employees")
+  console.log("  GET    /api/v1/employees/:id")
+  console.log("  PUT    /api/v1/employees/:id")
+  console.log("  DELETE /api/v1/employees/:id")
+  console.log("  GET    /api/v1/employees/me")
+  console.log("  GET    /api/v1/availability/:employeeId")
+  console.log("  PUT    /api/v1/availability/:employeeId")
+  console.log("  GET    /api/v1/schedule")
+  console.log("  PUT    /api/v1/schedule")
+  console.log("  DELETE /api/v1/schedule/:id")
 })

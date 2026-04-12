@@ -14,7 +14,7 @@ function App() {
 
 // Login
 const login = async () => {
-  const res = await fetch("http://localhost:3000/auth/login", {
+  const res = await fetch("http://localhost:5050/api/v1/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",   // ← always needed for sessions!
@@ -25,7 +25,7 @@ const login = async () => {
 
 // Any protected request
 const getEmployees = async () => {
-  const res = await fetch("http://localhost:3000/employees", {
+  const res = await fetch("http://localhost:5050/api/v1/employees", {
     credentials: "include"    // ← sends cookie automatically
   })
   const data = await res.json()
@@ -33,7 +33,7 @@ const getEmployees = async () => {
 
 // Logout
 const logout = async () => {
-  await fetch("http://localhost:3000/auth/logout", {
+  await fetch("http://localhost:5050/api/v1/auth/logout", {
     method: "POST",
     credentials: "include"
   })
