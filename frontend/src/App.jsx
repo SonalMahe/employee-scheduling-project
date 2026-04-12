@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5050/api/v1";
+
 function App() {
   return (
     <div className="App">
@@ -14,7 +16,7 @@ function App() {
 
 // Login
 const login = async () => {
-  const res = await fetch("http://localhost:3000/auth/login", {
+  const res = await fetch(`${API_BASE_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",   // ← always needed for sessions!
@@ -25,7 +27,7 @@ const login = async () => {
 
 // Any protected request
 const getEmployees = async () => {
-  const res = await fetch("http://localhost:3000/employees", {
+  const res = await fetch(`${API_BASE_URL}/employees`, {
     credentials: "include"    // ← sends cookie automatically
   })
   const data = await res.json()
@@ -33,7 +35,7 @@ const getEmployees = async () => {
 
 // Logout
 const logout = async () => {
-  await fetch("http://localhost:3000/auth/logout", {
+  await fetch(`${API_BASE_URL}/auth/logout`, {
     method: "POST",
     credentials: "include"
   })
