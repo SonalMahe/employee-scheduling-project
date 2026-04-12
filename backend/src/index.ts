@@ -13,7 +13,7 @@ import availabilityRoutes from "./routes/availability.routes"
 
 const app = express()
 const PgStore = connectPgSimple(session)
-const PORT = process.env.PORT ?? 5050
+const PORT = process.env.BACKEND_PORT ?? process.env.PORT ?? 5050
 
 // ── Middleware ─────────────────────────────
 app.use(express.json())
