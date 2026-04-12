@@ -8,8 +8,8 @@ import cors from "cors"
 
 import authRoutes from "./routes/auth.routes"
 import employeeRoutes from "./routes/employees.routes"
-// import scheduleRoutes from "../routes/schedule"
-// import availabilityRoutes from "../routes/availability"
+import scheduleRoutes from "./routes/schedule.routes"
+import availabilityRoutes from "./routes/availability.routes"
 
 const app = express()
 const PgStore = connectPgSimple(session)
@@ -48,8 +48,8 @@ app.use(
 // ── Routes ─────────────────────────────────
 app.use("/auth", authRoutes)
 app.use("/employees", employeeRoutes)
-// app.use("/schedule", scheduleRoutes)
-// app.use("/availability", availabilityRoutes)
+app.use("/schedule", scheduleRoutes)
+app.use("/availability", availabilityRoutes)
 
 
 
@@ -62,12 +62,20 @@ app.get("/", (_req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
   console.log("\nRegistered routes:")
-  console.log("  POST /auth/login")
-  console.log("  POST /auth/logout")
-  console.log("  GET  /auth/me")
-  console.log("  GET  /employees")
-  console.log("  POST /employees")
-  console.log("  GET  /employees/:id")
+  console.log("  POST   /auth/login")
+  console.log("  POST   /auth/logout")
+  console.log("  GET    /auth/me")
+  console.log("  GET    /employees")
+  console.log("  POST   /employees")
+  console.log("  GET    /employees/:id")
+  console.log("  PUT    /employees/:id")
+  console.log("  DELETE /employees/:id")
+  console.log("  GET    /employees/me")
+  console.log("  GET    /availability/:employeeId")
+  console.log("  PUT    /availability/:employeeId")
+  console.log("  GET    /schedule")
+  console.log("  PUT    /schedule")
+  console.log("  DELETE /schedule/:id")
 })
 
 // ── Start server ───────────────────────────
