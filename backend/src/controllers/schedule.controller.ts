@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth';
-import { UpdateScheduleSchema } from '../schemas';
+import { UpdateScheduleSchema } from '../schema';
 import { getSchedule, updateSchedule, deleteScheduleEntry } from '../services/schedule.service';
 
 
@@ -31,7 +31,7 @@ export async function assignSchedule(req: AuthRequest, res: Response, next: Next
 //DELETE /schedule/:id – remove a specific schedule entry-
 export async function removeScheduleEntry(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.id as string);
     if (isNaN(id)) { res.status(400).json({ error: 'Invalid ID' }); return; }
     await deleteScheduleEntry(id);
     res.status(200).json({ message: 'Schedule entry removed' });
