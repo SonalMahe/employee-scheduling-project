@@ -13,7 +13,7 @@ export async function fetchAvailability(req: AuthRequest, res: Response, next: N
     }
 
     // GET /availability/:id – get employee availability
-    if (req.user?.role === 'employee' && req.user.employeeId !== employeeId) {
+    if (req.user?.role === 'EMPLOYEE' && req.user.employeeId !== employeeId) {
       throw new AppError('You can only view your own availability', 403);
     }
 
@@ -33,7 +33,7 @@ export async function setAvailability(req: AuthRequest, res: Response, next: Nex
     }
 
     //PUT /availability/:id – employee sets own availability
-    if (req.user?.role === 'employee' && req.user.employeeId !== employeeId) {
+    if (req.user?.role === 'EMPLOYEE' && req.user.employeeId !== employeeId) {
       throw new AppError('You can only update your own availability', 403);
     }
 
