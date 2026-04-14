@@ -1,10 +1,14 @@
 const BASE = "http://localhost:5000/api";
 const KEY = "sg_user";
 
- // Session management 
+// ================================
+// SESSION MANAGEMENT
+// ================================
 export const saveSession = (user) =>
   localStorage.setItem(KEY, JSON.stringify(user));
-export const clearSession = () => localStorage.removeItem(KEY);
+
+export const clearSession = () =>
+  localStorage.removeItem(KEY);
 
 export const loadSession = () => {
   try {
@@ -15,32 +19,80 @@ export const loadSession = () => {
   }
 };
 
-// Helper function for API requests
+// ================================
+// REQUEST HELPER
+// ================================
 const request = async (path, options = {}) => {
+  const session = loadSession();
+
   const res = await fetch(`${BASE}${path}`, {
     credentials: "include",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(session?.token && {
+        Authorization: `Bearer ${session.token}`,
+      }),
+    },
     ...options,
   });
+
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error ?? "Request failed");
+
+  if (!res.ok) {
+    throw new Error(data.message || data.error || "Request failed");
+  }
+
   return data;
 };
 
-// Authentication
-export const login = (email, password) =>
-  request("/auth/login", {
+// ================================
+// AUTH
+// ================================
+export const login = async (email, password) => {
+  const data = await request("/auth/login", {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
 
+  saveSession(data); // store token + user
+  return data;
+};
 
+// ================================
+// EMPLOYEES
+// ================================
+export const getEmployees = () =>
+  request("/employees");
 
+export const getEmployeeById = (id) =>
+  request(`/employees/${id}`);
 
+export const createEmployee = (payload) =>
+  request("/employees", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 
+// ================================
+// AVAILABILITY
+// ================================
+export const getAvailability = (employeeId) =>
+  request(`/availability/${employeeId}`);
 
+export const updateAvailability = (employeeId, payload) =>
+  request(`/availability/${employeeId}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
 
+// ================================
+// SCHEDULE
+// ================================
+export const getSchedule = () =>
+  request("/schedule");
 
-
-
-
+export const updateSchedule = (payload) =>
+  request("/schedule", {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
