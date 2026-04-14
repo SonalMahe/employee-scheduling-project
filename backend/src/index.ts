@@ -19,7 +19,7 @@ const PORT = process.env.BACKEND_PORT ?? process.env.PORT ?? 5050
 app.use(express.json())
 
 app.use(cors({
-  origin: "http://localhost:5173", // your frontend URL
+  origin: "http://localhost:3000", // your frontend URL
   credentials: true               // ← required for sessions!
 }))
 
