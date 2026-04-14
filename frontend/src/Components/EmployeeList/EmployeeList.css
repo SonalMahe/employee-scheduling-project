@@ -1,0 +1,71 @@
+/* Container */
+.container {
+  padding: 20px;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+}
+
+/* Title */
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Button */
+.register-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.register-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Table */
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.employee-table th,
+.employee-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.employee-table th {
+  background-color: #f0f0f0;
+}
+
+/* Hover effect */
+.employee-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Messages */
+.loading {
+  text-align: center;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.empty {
+  text-align: center;
+  color: gray;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}

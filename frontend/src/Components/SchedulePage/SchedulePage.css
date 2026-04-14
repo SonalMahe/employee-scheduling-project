@@ -1,0 +1,60 @@
+/* Container */
+.schedule-container {
+  padding: 20px;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+}
+
+/* Title */
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Input */
+.select-box {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.select-box input {
+  padding: 8px;
+  margin-left: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Table */
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.schedule-table th,
+.schedule-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+/* Header */
+.schedule-table th {
+  background-color: #eaeaea;
+}
+
+/* Shift column */
+.shift-name {
+  font-weight: bold;
+  background-color: #f9f9f9;
+}
+
+/* Cells */
+.cell {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cell:hover {
+  background-color: #dbeafe;
+}
