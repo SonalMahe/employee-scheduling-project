@@ -2,19 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./EmployeeList.css";
 
-// ✅ Type definition
-type Employee = {
-  id: number;
-  name: string;
-  email: string;
-};
-
 const EmployeeList = () => {
   const navigate = useNavigate();
 
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
+  const [employees, setEmployees] = useState < array > [];
+  const [loading, setLoading] = useState < boolean > true;
+  const [error, setError] = useState < string > "";
 
   useEffect(() => {
     fetchEmployees();
@@ -34,7 +27,7 @@ const EmployeeList = () => {
         throw new Error("Failed to fetch employees");
       }
 
-      const data: Employee[] = await response.json();
+      const data = await response.json();
 
       setEmployees(data);
     } catch (err) {

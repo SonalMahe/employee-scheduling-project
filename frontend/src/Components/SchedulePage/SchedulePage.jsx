@@ -4,15 +4,11 @@ import "./SchedulePage.css";
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 const shifts = ["Morning", "Afternoon", "Night"];
 
-type Schedule = {
-  [key: string]: string;
-};
-
 const SchedulePage = () => {
-  const [schedule, setSchedule] = useState<Schedule>({});
+  const [schedule, setSchedule] = useState < Schedule > {};
   const [selectedEmployee, setSelectedEmployee] = useState("");
 
-  const handleAssign = (day: string, shift: string) => {
+  const handleAssign = (day, shift) => {
     if (!selectedEmployee) {
       alert("Select employee first");
       return;
