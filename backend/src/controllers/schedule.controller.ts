@@ -16,7 +16,7 @@ export async function fetchSchedule(req: AuthRequest, res: Response, next: NextF
 }
  
 
-//PUT /schedule – employer assigns employees to shifts-
+//PUT /schedule – employer or employee assigns shifts-
 export async function assignSchedule(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     const input = UpdateScheduleSchema.parse(req.body);
