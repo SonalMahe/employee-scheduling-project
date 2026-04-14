@@ -8,7 +8,18 @@ import { getSchedule, updateSchedule, deleteScheduleEntry } from '../services/sc
 export async function fetchSchedule(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     const { startDate, endDate } = req.query as { startDate?: string; endDate?: string };
-    const schedule = await getSchedule(startDate, endDate);
+
+    // EMPLOYEE sees only their own schedule, EMPLOYER sees all schedules.
+    let employeeId: number | undefined;
+    if (req.user?.role === 'EMPLOYEE') {
+      employeeId = req.user.employeeId;
+      if (employeeId === undefined) {
+        res.status(403).json({ error: 'Employee session is missing employee ID' });
+        return;
+      }
+    }
+
+    const schedule = await getSchedule(startDate, endDate, employeeId);
     res.status(200).json(schedule);
   } catch (err) {
     next(err);
