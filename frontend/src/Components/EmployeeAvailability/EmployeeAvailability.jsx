@@ -11,7 +11,7 @@ const shifts = ["morning", "afternoon", "night"];
 
 const EmployeeAvailability = () => {
   const session = loadSession();
-  const employeeId = session?.user?.id;
+  const employeeId = session?.employeeId;
 
   const [availability, setAvailability] = useState({});
   const [selected, setSelected] = useState(null);
