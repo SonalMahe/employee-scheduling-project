@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  getEmployees,
+  loadSession,
+} from "../../Api/api";
 import "./EmployeeList.css";
 
 const EmployeeList = () => {
   const navigate = useNavigate();
 
-  const [employees, setEmployees] = useState < array > [];
-  const [loading, setLoading] = useState < boolean > true;
-  const [error, setError] = useState < string > "";
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchEmployees();
@@ -15,25 +19,12 @@ const EmployeeList = () => {
 
   const fetchEmployees = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      const response = await fetch("http://localhost:3000/employees", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch employees");
-      }
-
-      const data = await response.json();
-
+      const data = await getEmployees();
       setEmployees(data);
+      setLoading(false);
     } catch (err) {
-      setError("Error fetching employees");
       console.error(err);
-    } finally {
+      setError("Failed to fetch employees");
       setLoading(false);
     }
   };
@@ -45,8 +36,8 @@ const EmployeeList = () => {
     <div className="container">
       <h2 className="title">Employee List</h2>
 
-      <button className="schedule-btn" onClick={() => navigate("/schedule")}>
-        Go to Schedule
+      <button className="register-btn" onClick={() => navigate("/register-employee")}>
+        Register new Employee
       </button>
 
       {employees.length === 0 ? (
@@ -55,7 +46,6 @@ const EmployeeList = () => {
         <table className="employee-table">
           <thead>
             <tr>
-              <th>Avatar</th>
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
@@ -64,18 +54,10 @@ const EmployeeList = () => {
 
           <tbody>
             {employees.map((emp) => (
-              <tr key={emp.id}>
-                <td>
-                  <img
-                    src={`https://i.pravatar.cc/150?img=${emp.id % 70}`}
-                    className="avatar"
-                    alt="avatar"
-                  />
-                </td>
-
-                <td>{emp.id}</td>
-                <td>{emp.name}</td>
-                <td>{emp.email}</td>
+              <tr key={emp.user.id}>
+                <td>{emp.user.id}</td>
+                <td>{emp.user.name}</td>
+                <td>{emp.user.email}</td>
               </tr>
             ))}
           </tbody>

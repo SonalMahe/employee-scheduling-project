@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { createEmployee, loadSession } from '../../Api/api';
 import "./RegisterEmployee.css";
 
 const RegisterEmployee = () => {
   const session = loadSession();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -52,6 +54,7 @@ const RegisterEmployee = () => {
       await createEmployee(payload);
 
       setSuccess("Employee registered successfully!");
+
       setFormData({
         firstName: "",
         lastName: "",
@@ -60,6 +63,7 @@ const RegisterEmployee = () => {
         role: "waiter",
         photo: null,
       });
+      navigate("/employee-list");
     } catch (err) {
       setError(err.message);
     } finally {

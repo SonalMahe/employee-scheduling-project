@@ -14,7 +14,7 @@ function Login() {
   // Skip login if already logged in
   useEffect(() => {
     const session = loadSession();
-    if (session?.role === "EMPLOYER") navigate("/register-employee");
+    if (session?.role === "EMPLOYER") navigate("/employee-list");
     else if (session?.role === "EMPLOYEE") navigate("/availability");
     else if (session) navigate("/");
   }, [navigate]);
@@ -47,7 +47,7 @@ function Login() {
       setEmail('');
       setPassword('');
       
-      navigate(user.role === "EMPLOYER" ? "/employer" : "/employee");
+      navigate(user.role === "EMPLOYER" ? "/employee-list" : "/availability");
     } catch (err) {
       setError(err.message);
     } finally {

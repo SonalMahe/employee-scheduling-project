@@ -5,7 +5,7 @@ const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 const shifts = ["Morning", "Afternoon", "Night"];
 
 const SchedulePage = () => {
-  const [schedule, setSchedule] = useState < Schedule > {};
+  const [schedule, setSchedule] = useState ({});
   const [selectedEmployee, setSelectedEmployee] = useState("");
 
   const handleAssign = (day, shift) => {
