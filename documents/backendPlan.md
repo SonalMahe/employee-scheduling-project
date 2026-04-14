@@ -1,4 +1,4 @@
-#  Backend Development Plan
+# Backend Development Plan
 
 ## Goal
 
@@ -6,214 +6,200 @@ Build a **TypeScript backend** using **Node.js** and **Express** to replace the 
 
 ---
 
-## Current Frontend Status
+## Tech Stack
 
-* Uses modular local domain logic:
-
-  * `react-vite-app/src/lib/store-*.ts`
-* API layer abstraction:
-
-  * `react-vite-app/src/lib/api.ts`
-* Uses:
-
-  * Vite base path: `/frontEnd/`
-  * `HashRouter` for static hosting (GitHub Pages)
-
-### Migration Strategy
-
-* Replace `appApi` local functions with **HTTP API calls**
-* Keep UI components mostly unchanged
+| Layer | Technology |
+|---|---|
+| Runtime | Node.js + TypeScript |
+| Framework | Express v5 |
+| ORM | Prisma v6 |
+| Database | PostgreSQL |
+| Auth | express-session + connect-pg-simple |
+| Validation | Zod v4 |
+| Security | bcryptjs, CORS |
 
 ---
 
-## Recommended Backend Structure
+## Project Structure
 
 ```
-src/
-  server.ts        # Start server
-  app.ts           # Express app setup
+backend/
+  src/
+    index.ts              # Server entry point
+    routes/               # Route definitions
+    controllers/          # Request/response handling
+    services/             # Business logic
+    middleware/           # Auth, error handling
+    schema/               # Zod validation schemas + types
+    types/                # Shared TypeScript types
+    utils/                # Prisma client instance
 
-  routes/          # API routes
-  controllers/     # Request handling
-  services/        # Business logic
-  middleware/      # Auth, validation, errors
-  types/           # Shared TypeScript types
-  schema/          # Zod validation , error handling
-
-prisma/
-  schema.prisma
-  migrations/
+  prisma/
+    schema.prisma         # Database schema
+    seed.ts               # Seed data
+    migrations/           # Migration history
 ```
 
 ---
 
-## Core Features
+## Database Schema
 
-* Authentication (login/logout/session)
-* Employee management
-* Availability tracking
-* Schedule creation & updates
-* Shift requirements control
-* Shift handover workflow
-* Audit logging for changes
+### Enums
+
+| Enum | Values |
+|---|---|
+| `Role` | EMPLOYER, EMPLOYEE |
+| `ShiftType` | MORNING, AFTERNOON, NIGHT |
+| `Position` | WAITER, RUNNER, HEAD_WAITER, ADMIN, CHEF |
+| `DayOfWeek` | MONDAY – SUNDAY |
+| `AvailabilityStatus` | AVAILABLE, UNAVAILABLE, PREFERRED |
+
+### Models
+
+| Model | Key Fields |
+|---|---|
+| `User` | id, name, email, loginCode, position?, role, photoUrl?, createdAt |
+| `Employee` | id, userId (→ User) |
+| `Shift` | id, name (ShiftType, unique) |
+| `Availability` | id, employeeId, shiftId, dayOfWeek, status — unique(employeeId, shiftId, dayOfWeek) |
+| `ScheduleEntry` | id, employeeId, shiftId, date (DATE) — unique(employeeId, date) |
 
 ---
 
 ## API Endpoints
 
-###  Auth
+Base URL: `http://localhost:5050/api/v1`
 
-* `POST /auth/login`
-* `POST /auth/logout`
-* `GET /me`
+### Auth
 
-###  Employees
+| Method | Path | Access | Description |
+|---|---|---|---|
+| POST | `/api/v1/auth/login` | Public | Login with email + loginCode |
+| POST | `/api/v1/auth/logout` | Authenticated | Destroy session |
+| GET | `/api/v1/auth/me` | Authenticated | Get current user profile |
 
-* `GET /employees`
-* `POST /employees`
-* `PATCH /employees/:id`
+### Employees
+
+| Method | Path | Access | Description |
+|---|---|---|---|
+| GET | `/api/v1/employees` | Employer only | List all employees |
+| POST | `/api/v1/employees` | Employer only | Register new employee |
+| GET | `/api/v1/employees/:id` | Employer only | Get employee by ID |
+| PUT | `/api/v1/employees/:id` | Employer only | Update employee |
+| DELETE | `/api/v1/employees/:id` | Employer only | Delete employee |
+| GET | `/api/v1/employees/me` | Employee only | Get own profile + availability + schedule |
 
 ### Availability
 
-* `GET /availability`
-* `PUT /availability/:userId`
+| Method | Path | Access | Description |
+|---|---|---|---|
+| GET | `/api/v1/availability/:employeeId` | Authenticated | Get employee availability |
+| PUT | `/api/v1/availability/:employeeId` | Authenticated | Set/update availability |
 
-###  Schedule
+**PUT body example:**
+```json
+{
+  "availabilities": [
+    { "dayOfWeek": "MONDAY", "shiftName": "MORNING", "status": "PREFERRED" },
+    { "dayOfWeek": "MONDAY", "shiftName": "AFTERNOON", "status": "UNAVAILABLE" }
+  ]
+}
+```
 
-* `GET /schedule`
-* `PUT /schedule`
-* `POST /schedule/assign`
-* `POST /schedule/remove`
-* `PATCH /schedule/requirements/:shift/:day`
+**Status values:**
+- `AVAILABLE` — willing to work this shift
+- `UNAVAILABLE` — cannot work this shift
+- `PREFERRED` — specifically wants this shift
 
+### Schedule
 
-### 📊 Audit
+| Method | Path | Access | Description |
+|---|---|---|---|
+| GET | `/api/v1/schedule` | Authenticated | Get schedule (defaults to current week) |
+| PUT | `/api/v1/schedule` | Employer only | Assign employees to shifts |
+| DELETE | `/api/v1/schedule/:id` | Employer only | Remove a schedule entry |
 
-* `GET /audit`
+**GET query params:**
+```
+?startDate=2026-04-07&endDate=2026-04-13
+```
+
+**PUT body example:**
+```json
+{
+  "entries": [
+    { "employeeId": 1, "shiftName": "MORNING", "date": "2026-04-14" }
+  ]
+}
+```
+
+---
+
+## Authentication Flow
+
+1. Client sends `POST /api/v1/auth/login` with email + password (loginCode)
+2. Server validates credentials, stores user in session (`req.session.user`)
+3. Browser receives `connect.sid` cookie (httpOnly, 8hr expiry)
+4. All subsequent requests send cookie automatically
+5. `authenticate` middleware reads session and attaches user to `req.user`
+6. Role middleware (`requireEmployer` / `isEmployee`) enforces access control
+
+> Every frontend request must include `credentials: "include"` for the session cookie to be sent.
+
+---
+
+## Middleware
+
+| Middleware | File | Purpose |
+|---|---|---|
+| `authenticate` | `auth.ts` | Verify session, attach `req.user` |
+| `requireEmployer` | `auth.ts` | Restrict to EMPLOYER role |
+| `isEmployee` | `auth.ts` | Restrict to EMPLOYEE role |
+| `errorHandler` | `errorHandlerMiddleware.ts` | Centralised error + Zod error formatting |
 
 ---
 
 ## Architecture Layers
 
-### 🔹 Routes (`src/routes/`)
+```
+Request → Route → Middleware → Controller → Service → Prisma → PostgreSQL
+```
 
-Defines API endpoints.
-
-Examples:
-
-* `auth.routes.ts`
-* `employee.routes.ts`
-* `availability.routes.ts`
-* `schedule.routes.ts`
-* `handover.routes.ts`
-* `audit.routes.ts`
+- **Routes** — define path, apply middleware, delegate to controller
+- **Controllers** — parse request, call service, send response
+- **Services** — all business logic and database queries
+- **Schema** — Zod validation schemas and inferred TypeScript types
 
 ---
 
-### Controllers (`src/controllers/`)
+## Seed Data
 
-* Handle request/response
-* Call services
-* Keep logic minimal
-
----
-
-### Services (`src/services/`)
-
-* Core business logic
-* Validation rules
-* Workflow handling
-
----
-
-###  Middleware (`src/middleware/`)
-
-* `auth.middleware.ts` → authentication
-* `role.middleware.ts` → role-based access
-* `validate.middleware.ts` → request validation
-* `error.middleware.ts` → centralized error handling
+| Role | Name | Email | LoginCode |
+|---|---|---|---|
+| EMPLOYER | Sonal Maheshwari | sonal.maheshwari@sundsgarden.se | 2010 |
+| EMPLOYEE | Hanna Persson | hanna.persson@sundsgarden.se | 2001 |
+| EMPLOYEE | Max Olsson | max.olsson@sundsgarden.se | 2002 |
+| EMPLOYEE | Alia Lindberg | alia.lindberg@sundsgarden.se | 2003 |
+| EMPLOYEE | Isak Norberg | isak.norberg@sundsgarden.se | 2004 |
+| EMPLOYEE | Tilda Åberg | tilda.aberg@sundsgarden.se | 2005 |
+| EMPLOYEE | Noah Ekström | noah.ekstrom@sundsgarden.se | 2006 |
+| EMPLOYEE | Freja Holmberg | freja.holmberg@sundsgarden.se | 2007 |
+| EMPLOYEE | Axel Dahl | axel.dahl@sundsgarden.se | 2008 |
+| EMPLOYEE | Nora Falk | nora.falk@sundsgarden.se | 2009 |
 
 ---
 
-### Types (`src/types/`)
+## Build Status
 
-* `auth.types.ts`
-* `employee.types.ts`
-* `availability.types.ts`
-* `schedule.types.ts`
-* `api.types.ts`
-
----
-
-## Database Layer
-
-### Prisma Setup
-
-* Schema: `prisma/schema.prisma`
-* Migrations: `prisma/migrations/`
-
----
-
-## Data Model
-
-* users
-* employees
-* availability
-* schedule
-* shift_requirements
-* shift_exchange_requests
-* schedule_audit
-
----
-
-## Frontend → Backend Mapping
-
-| Frontend Module       | Backend Responsibility     |
-| --------------------- | -------------------------- |
-| store-auth.ts         | Auth API                   |
-| store-employees.ts    | Employee API               |
-| store-availability.ts | Availability API           |
-| store-schedule.ts     | Schedule API               |
-| store-handovers.ts    | Handover API               |
-| api.ts                | HTTP adapter (fetch/axios) |
-
----
-
-## Build Order
-
-1. Setup Express + TypeScript backend
-2. Implement authentication & roles
-3. Add employee management
-4. Add availability system
-5. Build scheduling logic
-6. Add handover workflow
-7. Implement audit logging
-8. Replace frontend local storage with API calls
-
----
-
-## Incremental Migration Plan
-
-1. Keep UI unchanged
-2. Replace `appApi` methods step-by-step:
-
-   * Auth endpoints
-   * Employees & availability
-   * Schedule & handovers
-   * Audit
-3. Remove local storage once migration is complete
-
----
-
-## Next Step
-
-* Initialize backend project
-* Setup Prisma & database
-* Implement:
-
-  * Auth system
-  * Employee endpoints
-
-👉 This enables frontend to start switching to API calls.
+- [x] Express + TypeScript setup
+- [x] PostgreSQL + Prisma configured
+- [x] Session-based authentication
+- [x] Role-based middleware
+- [x] Employee CRUD (employer)
+- [x] Availability read/write (employee)
+- [x] Schedule read/write (employer assigns, both can read)
+- [x] API versioning (`/api/v1/`)
+- [ ] Photo upload for employees
+- [ ] Frontend integration
 
 ---

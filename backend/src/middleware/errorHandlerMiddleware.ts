@@ -1,14 +1,13 @@
 /**
  * ERROR HANDLER MIDDLEWARE
- * 
- * This is the "catch-all" at the end of the middleware chain.
- * Express calls this whenever you call next(error) from a route.
+ * Catches errors thrown in routes and sends appropriate responses.
  * 
  * It handles:
  * - ZodError → 400 Bad Request with field-level messages
  * - AppError → our custom errors with specific status codes
  * - Everything else → 500 Internal Server Error
  */
+
 import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 
@@ -50,5 +49,8 @@ export function errorHandler(
     res.status(err.statusCode).json({ error: err.message });
     return;
   }
-                                                               
+
+  // Catch-all for unexpected errors
+  console.error(err);
+  res.status(500).json({ error: "Something went wrong" });
 }

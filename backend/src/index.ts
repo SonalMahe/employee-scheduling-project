@@ -6,20 +6,21 @@ import session from "express-session"
 import connectPgSimple from "connect-pg-simple"
 import cors from "cors"
 
-import authRoutes from "./routes/auth.routes"
-import employeeRoutes from "./routes/employees.routes"
-import scheduleRoutes from "./routes/schedule.routes"
-import availabilityRoutes from "./routes/availability.routes"
+import authRoutes         from "./controllers/auth.controller"
+import employeeRoutes     from "./controllers/employee.controller"
+import scheduleRoutes     from "./controllers/schedule.controller"
+import availabilityRoutes from "./controllers/availability.controller"
+import { errorHandler }   from "./middleware/errorHandlerMiddleware"
 
 const app = express()
 const PgStore = connectPgSimple(session)
-const PORT = process.env.PORT ?? 3000
+const PORT = process.env.PORT ?? 5050
 
 // ── Middleware ─────────────────────────────
 app.use(express.json())
 
 app.use(cors({
-  origin: "http://localhost:5173", // your frontend URL
+  origin: "http://localhost:3000", // your frontend URL
   credentials: true               // ← required for sessions!
 }))
 
@@ -51,6 +52,7 @@ app.use("/employees", employeeRoutes)
 app.use("/schedule", scheduleRoutes)
 app.use("/availability", availabilityRoutes)
 
+<<<<<<< Updated upstream
 
 
 // Optional: add a root route so browser doesn't show Cannot GET /
@@ -77,6 +79,16 @@ app.listen(PORT, () => {
   console.log("  PUT    /schedule")
   console.log("  DELETE /schedule/:id")
 })
+=======
+// check
+app.get("/", (req, res) => {
+  res.json({ message: "Employee Scheduling API is running!" })
+})
+
+// ── Error handler ──────────────────────────
+// Must be registered AFTER all routes
+app.use(errorHandler)
+>>>>>>> Stashed changes
 
 // ── Start server ───────────────────────────
 app.listen(PORT, () => {

@@ -1,8 +1,8 @@
-/**
- * SCHEDULE SERVICE
- * Handles reading and writing the job schedule.
- * Employer assigns employees to shifts; both roles can read.
- */
+// /
+//  * SCHEDULE SERVICE
+//  * Handles reading and writing the job schedule.
+//  * Employer assigns employees to shifts; both roles can read.
+//  *
 import prisma from '../utils/prisma'
 import { AppError } from '../middleware/errorHandlerMiddleware'
 import { UpdateScheduleInput } from '../schema'

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import "express-session";
-import { SessionUser } from "../types/session.d";
+import { SessionUser } from "../types/user.types";
 
 // ─────────────────────────────────────────
 // AuthRequest — extends Express Request with
