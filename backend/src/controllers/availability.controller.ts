@@ -26,7 +26,7 @@ export async function fetchAvailability(req: AuthRequest, res: Response, next: N
 
 export async function setAvailability(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
   try {
-    const employeeId = parseInt(req.params.employeeId);
+    const employeeId = parseInt(req.params.employeeId as string);
     if (isNaN(employeeId)) {
       res.status(400).json({ error: 'Invalid employee ID' });
       return;

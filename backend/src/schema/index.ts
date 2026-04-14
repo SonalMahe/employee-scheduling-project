@@ -1,9 +1,4 @@
-import { z } from "zod"
-
-// ─────────────────────────────────────────
-// Install zod if not already installed:
-// npm install zod
-// ─────────────────────────────────────────
+import { z } from "zod";
 
 // ── Day of week ───────────────────────────
 export const DayOfWeekSchema = z.enum([

@@ -8,8 +8,8 @@ router.use(authenticate);
 // GET /schedule — both employer and employee
 router.get('/', fetchSchedule);
 
-// PUT /schedule — employer only
-router.put('/', requireEmployer, assignSchedule);
+// PUT /schedule — both employer and employee
+router.put('/', assignSchedule);
 
 // DELETE /schedule/:id — employer only
 router.delete('/:id', requireEmployer, removeScheduleEntry);
