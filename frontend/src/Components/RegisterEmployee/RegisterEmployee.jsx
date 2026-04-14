@@ -73,7 +73,6 @@ const RegisterEmployee = () => {
         <h2 className="register-title">Register new employee</h2>
 
         {error && <div className="error-message">{error}</div>}
-        {success && <div className="success-message">{success}</div>}
 
         <form className="register-grid" onSubmit={handleSubmit}>
           {/* LEFT SIDE */}
@@ -134,9 +133,12 @@ const RegisterEmployee = () => {
                 value={formData.role}
                 onChange={handleChange}
               >
-                <option value="waiter">Waiter</option>
-                <option value="runner">Runner</option>
-                <option value="head_waiter">Head Waiter</option>
+                <option value="WAITER">Waiter</option>
+                <option value="RUNNER">Runner</option>
+                <option value="HEAD_WAITER">Head Waiter</option>
+                <option value="ADMIN">Admin</option>
+                <option value="CHEF">Chef</option>
+                <option value="HEAD_WAITER">Head Waiter</option>
               </select>
             </div>
 
