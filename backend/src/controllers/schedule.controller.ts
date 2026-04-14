@@ -23,10 +23,16 @@ export async function assignSchedule(req: AuthRequest, res: Response, next: Next
 
     // If logged in as EMPLOYEE, they can only add schedule for themselves
     if (req.user?.role === 'EMPLOYEE') {
-      const isOwnOnly = input.entries.every(entry => entry.employeeId === req.user?.employeeId)
+      const employeeId = req.user.employeeId;
+      if (employeeId === undefined) {
+        res.status(403).json({ error: 'Employee session is missing employee ID' });
+        return;
+      }
+
+      const isOwnOnly = input.entries.every(entry => entry.employeeId === employeeId);
       if (!isOwnOnly) {
-        res.status(403).json({ error: 'You can only add schedule entries for yourself' })
-        return
+        res.status(403).json({ error: 'You can only add schedule entries for yourself' });
+        return;
       }
     }
 
