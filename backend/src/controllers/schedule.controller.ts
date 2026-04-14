@@ -20,6 +20,16 @@ export async function fetchSchedule(req: AuthRequest, res: Response, next: NextF
 export async function assignSchedule(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     const input = UpdateScheduleSchema.parse(req.body);
+
+    // If logged in as EMPLOYEE, they can only add schedule for themselves
+    if (req.user?.role === 'EMPLOYEE') {
+      const isOwnOnly = input.entries.every(entry => entry.employeeId === req.user?.employeeId)
+      if (!isOwnOnly) {
+        res.status(403).json({ error: 'You can only add schedule entries for yourself' })
+        return
+      }
+    }
+
     const results = await updateSchedule(input);
     res.status(200).json({ message: 'Schedule updated', count: results.length, results });
   } catch (err) {
