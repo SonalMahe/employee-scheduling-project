@@ -1,3 +1,25 @@
+/* ============================================================================
+   GLOBAL COLOR PALETTE
+   ============================================================================ */
+
+:root {
+  --primary-color: #667eea;
+  --primary-dark: #764ba2;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --text-light: #999;
+  --border-color: #ddd;
+  --bg-light: #f5f5f5;
+  --bg-white: #ffffff;
+  --bg-input-focus: #fafbff;
+  --error-bg: #fee;
+  --error-text: #c33;
+}
+
+/* ============================================================================
+   APP CONTAINER
+   ============================================================================ */
+
 .App {
   text-align: center;
 }
@@ -9,6 +31,216 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: 24px;
   color: white;
+}
+
+/* ============================================================================
+   GLOBAL BACKGROUND STYLES
+   ============================================================================ */
+
+.bg-primary-gradient {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+}
+
+.bg-white {
+  background-color: var(--bg-white);
+}
+
+.bg-light {
+  background-color: var(--bg-light);
+}
+
+/* ============================================================================
+   GLOBAL INPUT STYLES
+   ============================================================================ */
+
+.input-field,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-primary);
+}
+
+.input-field:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background-color: var(--bg-input-focus);
+}
+
+.input-field:disabled,
+input[type="text"]:disabled,
+input[type="email"]:disabled,
+input[type="password"]:disabled,
+input[type="number"]:disabled,
+textarea:disabled,
+select:disabled {
+  background-color: var(--bg-light);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.input-field::placeholder,
+input::placeholder {
+  color: #b0b0b0;
+}
+
+/* ============================================================================
+   GLOBAL CHECKBOX & RADIO STYLES
+   ============================================================================ */
+
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: pointer;
+  accent-color: var(--primary-color);
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s ease;
+}
+
+input[type="checkbox"]:hover,
+input[type="radio"]:hover {
+  transform: scale(1.1);
+}
+
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================================
+   GLOBAL BUTTON STYLES
+   ============================================================================ */
+
+.btn-primary,
+.login-button,
+button:not([class]) {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-primary:hover:not(:disabled),
+.login-button:hover:not(:disabled),
+button:not([class]):hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:active:not(:disabled),
+.login-button:active:not(:disabled),
+button:not([class]):active:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.btn-primary:disabled,
+.login-button:disabled,
+button:not([class]):disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary-full {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* ============================================================================
+   GLOBAL FORM GROUP STYLES
+   ============================================================================ */
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* ============================================================================
+   CHECKBOX GROUP STYLES
+   ============================================================================ */
+
+.checkbox-group,
+.radio-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.checkbox-group label,
+.radio-group label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin: 0;
+}
+
+/* ============================================================================
+   GLOBAL ERROR STYLES
+   ============================================================================ */
+
+.error-message {
+  background-color: var(--error-bg);
+  color: var(--error-text);
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  border-left: 4px solid var(--error-text);
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================ */
+
+@media (max-width: 480px) {
+  .btn-primary,
+  button:not([class]) {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .input-field,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  textarea,
+  select {
+    font-size: 16px;
+  }
 }
