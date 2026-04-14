@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import EmployeeList from "./Components/EmployeeList/EmployeeList";
-
+import EmployeeList from "./Components/EmployeeList/EmployeeList.tsx";
+import JobSchedule from "./Components/SchedulePage/SchedulePage.tsx";
 function App() {
   return (
     <BrowserRouter>
@@ -10,6 +10,7 @@ function App() {
 
         <Routes>
           <Route path="/employees" element={<EmployeeList />} />
+          <Route path="/schedule" element={<JobSchedule />} />
         </Routes>
       </div>
     </BrowserRouter>

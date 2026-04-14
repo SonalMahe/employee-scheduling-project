@@ -62,6 +62,7 @@ const EmployeeList = () => {
         <table className="employee-table">
           <thead>
             <tr>
+              <th>Avatar</th>
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
@@ -71,6 +72,14 @@ const EmployeeList = () => {
           <tbody>
             {employees.map((emp) => (
               <tr key={emp.id}>
+                <td>
+                  <img
+                    src={`https://i.pravatar.cc/150?img=${emp.id % 70}`}
+                    className="avatar"
+                    alt="avatar"
+                  />
+                </td>
+
                 <td>{emp.id}</td>
                 <td>{emp.name}</td>
                 <td>{emp.email}</td>
