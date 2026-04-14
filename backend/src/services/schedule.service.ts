@@ -13,7 +13,7 @@ import { ShiftType } from '@prisma/client'
 // Returns all schedule entries within a date range.
 // If no dates provided, defaults to the current week (Mon–Sun).
 // ─────────────────────────────────────────
-export async function getSchedule(startDate?: string, endDate?: string) {
+export async function getSchedule(startDate?: string, endDate?: string, employeeId?: number) {
   // Default to current week if no dates given
   const today = new Date()
   const dayOfWeek = today.getDay() // 0 = Sun, 1 = Mon ...
@@ -30,7 +30,9 @@ export async function getSchedule(startDate?: string, endDate?: string) {
 
   return prisma.scheduleEntry.findMany({
     where: {
-      date: { gte: from, lte: to }
+      date: { gte: from, lte: to },
+      // If employeeId provided, filter to that employee only
+      ...(employeeId !== undefined && { employeeId })
     },
     include: {
       employee: {
