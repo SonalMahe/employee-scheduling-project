@@ -10,7 +10,14 @@ export async function fetchSchedule(req: AuthRequest, res: Response, next: NextF
     const { startDate, endDate } = req.query as { startDate?: string; endDate?: string };
 
     // EMPLOYEE sees only their own schedule, EMPLOYER sees all schedules.
-    const employeeId = req.user?.role === 'EMPLOYEE' ? req.user.employeeId : undefined
+    let employeeId: number | undefined;
+    if (req.user?.role === 'EMPLOYEE') {
+      employeeId = req.user.employeeId;
+      if (employeeId === undefined) {
+        res.status(403).json({ error: 'Employee session is missing employee ID' });
+        return;
+      }
+    }
 
     const schedule = await getSchedule(startDate, endDate, employeeId);
     res.status(200).json(schedule);
