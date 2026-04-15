@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { createEmployee, loadSession } from '../../Api/api';
+import Header from "../Header/Header";
 import "./RegisterEmployee.css";
 
 const RegisterEmployee = () => {
@@ -72,7 +73,8 @@ const RegisterEmployee = () => {
   };
 
   return (
-    <div className="register-container bg-light">
+    <div className="register-container">
+      <Header />
       <div className="register-card">
         <h2 className="register-title">Register new employee</h2>
 
@@ -142,7 +144,6 @@ const RegisterEmployee = () => {
                 <option value="HEAD_WAITER">Head Waiter</option>
                 <option value="ADMIN">Admin</option>
                 <option value="CHEF">Chef</option>
-                <option value="HEAD_WAITER">Head Waiter</option>
               </select>
             </div>
 

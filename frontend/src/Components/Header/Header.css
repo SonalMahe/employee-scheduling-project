@@ -1,0 +1,131 @@
+/* ============================================================================
+   HEADER
+   ============================================================================ */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 18px 32px;
+  background: transparent;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ============================================================================
+   HEADER - LEFT (BRAND)
+   ============================================================================ */
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-brand {
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================================
+   HEADER - RIGHT (LOGOUT + HAMBURGER)
+   ============================================================================ */
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.logout-btn {
+  padding: 10px 24px;
+  background: white;
+  color: #667eea;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.logout-btn:hover {
+  opacity: 0.85;
+}
+
+/* ============================================================================
+   HEADER - HAMBURGER
+   ============================================================================ */
+
+.hamburger-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.hamburger-btn:hover {
+  opacity: 0.75;
+}
+
+.hamburger-line {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: white;
+  border-radius: 2px;
+}
+
+/* ============================================================================
+   HEADER - MOBILE MENU DROPDOWN
+   ============================================================================ */
+
+.mobile-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  background: rgba(40, 40, 60, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.menu-item {
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s ease;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.menu-item.active {
+  background: rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+}
