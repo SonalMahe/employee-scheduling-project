@@ -2,7 +2,8 @@ import { Request, Response } from "express"
 import { loginService, getMeService } from "../services/auth.service"
 import { UserRole } from "../types/user.types"
 import { LoginSchema } from "../schema"
-import "express-session";
+import "express-session"
+import logger from "../utils/logger"
 
 
 // ─────────────────────────────────────────
@@ -14,6 +15,7 @@ export async function login(
   res: Response
 ): Promise<void> {
   try {
+    logger.info('Login attempt', { email: req.body?.email })
     const input = LoginSchema.parse(req.body)
 
     // Call service — all logic lives there
@@ -27,6 +29,7 @@ export async function login(
       employeeId: user.employeeId
     }
 
+    logger.info('Login successful', { userId: user.id, role: user.role })
     // Send response
     res.status(200).json({
       message:    "Login successful",
@@ -38,10 +41,12 @@ export async function login(
   } catch (err) {
     // loginService throws "Invalid email or password"
     if (err instanceof Error) {
+      logger.warn('Login failed', { error: err.message, email: req.body?.email })
       const statusCode = err.name === "ZodError" ? 400 : 401
       res.status(statusCode).json({ error: err.message })
       return
     }
+    logger.error('Unexpected login error')
     res.status(500).json({ error: "Something went wrong" })
   }
 }
@@ -54,11 +59,24 @@ export async function logout(
   req: Request,
   res: Response
 ): Promise<void> {
+  const userId = req.session?.user?.id
+  logger.info('Logout attempt', { userId })
+  
+  // If no session exists, just clear cookie and return success
+  if (!req.session || !req.session.user) {
+    logger.info('Logout called with no active session')
+    res.clearCookie("connect.sid")
+    res.status(200).json({ message: "Logged out successfully" })
+    return
+  }
+
   req.session.destroy((err) => {
     if (err) {
+      logger.error('Session destroy error', { error: err.message })
       res.status(500).json({ error: "Could not log out" })
       return
     }
+    logger.info('Logout successful', { userId })
     res.clearCookie("connect.sid")
     res.status(200).json({ message: "Logged out successfully" })
   })
@@ -74,8 +92,10 @@ export async function getMe(
 ): Promise<void> {
   try {
     const userId = req.session.user?.id
+    logger.info('GetMe request', { userId })
 
     if (!userId) {
+      logger.warn('GetMe failed - not logged in')
       res.status(401).json({ error: "Not logged in" })
       return
     }
@@ -87,9 +107,11 @@ export async function getMe(
 
   } catch (err) {
     if (err instanceof Error) {
+      logger.error('GetMe error', { error: err.message, userId: req.session.user?.id })
       res.status(404).json({ error: err.message })
       return
     }
+    logger.error('Unexpected GetMe error')
     res.status(500).json({ error: "Something went wrong" })
   }
 }
