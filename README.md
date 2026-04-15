@@ -64,7 +64,9 @@ SHIFT & SERVE  allows:
 ---
 
 ### Project Structure
+```bash
 employee-scheduling-project/
+
 ├── backend/
 │   ├── prisma/
 │   │   ├── schema.prisma       ← database blueprint
@@ -106,6 +108,7 @@ employee-scheduling-project/
 
 
 ### Database Schema
+
 User
 ├── id, name, email, loginCode, position, role
 └── has one Employee (if role = EMPLOYEE)
