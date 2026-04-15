@@ -63,7 +63,7 @@ SHIFT & SERVE  allows:
 
 ---
 
-## Project Structure
+### Project Structure
 employee-scheduling-project/
 ├── backend/
 │   ├── prisma/
@@ -105,7 +105,7 @@ employee-scheduling-project/
 └── README.md
 
 
-## 🗄️ Database Schema
+### Database Schema
 User
 ├── id, name, email, loginCode, position, role
 └── has one Employee (if role = EMPLOYEE)
