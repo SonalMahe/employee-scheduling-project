@@ -144,7 +144,6 @@ const RegisterEmployee = () => {
                 <option value="HEAD_WAITER">Head Waiter</option>
                 <option value="ADMIN">Admin</option>
                 <option value="CHEF">Chef</option>
-                <option value="HEAD_WAITER">Head Waiter</option>
               </select>
             </div>
 
