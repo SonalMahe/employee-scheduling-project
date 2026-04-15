@@ -1,38 +1,62 @@
-/* Container and Background - Login Page Style */
+/* ============================================================================
+   REGISTER EMPLOYEE - CONTAINER
+   ============================================================================ */
+
 .register-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+  padding: 0 20px 40px;
 }
 
-/* Grid Layout */
-.register-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 30px;
+/* ============================================================================
+   REGISTER EMPLOYEE - CARD
+   ============================================================================ */
+
+.register-card {
   background: white;
   border-radius: 10px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   padding: 40px;
   width: 100%;
-  max-width: 1000px;
+  max-width: 800px;
 }
 
-/* Right panel */
+.register-title {
+  text-align: center;
+  color: #333;
+  margin: 0 0 25px 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* ============================================================================
+   REGISTER EMPLOYEE - GRID LAYOUT
+   ============================================================================ */
+
+.register-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 30px;
+}
+
 .right-panel {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  justify-content: flex-start;
 }
 
-/* Responsive */
+/* ============================================================================
+   REGISTER EMPLOYEE - RESPONSIVE
+   ============================================================================ */
+
 @media (max-width: 768px) {
+  .register-card {
+    padding: 30px 20px;
+  }
+
   .register-grid {
     grid-template-columns: 1fr;
-    padding: 30px 20px;
   }
 }

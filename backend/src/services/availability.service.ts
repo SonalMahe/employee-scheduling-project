@@ -4,7 +4,7 @@
  */
 import  prisma  from '../utils/prisma';
 import { AppError } from '../middleware/errorHandlerMiddleware';
-import { UpdateAvailabilityInput } from "../schemas"
+import { UpdateAvailabilityInput } from "../schema"
 
 export async function getAvailability(employeeId: number): Promise<object[]> {
   // Check employee exists first
@@ -48,12 +48,12 @@ export async function updateAvailability(
           dayOfWeek: entry.dayOfWeek,
         },
       },
-      update: { available: entry.available },
+      update: { status: entry.status },
       create: {
         employeeId,
         shiftId: shift.id,
         dayOfWeek: entry.dayOfWeek,
-        available: entry.available,
+        status: entry.status,
       },
     });
     results.push(availability);

@@ -4,6 +4,7 @@ import {
   getEmployees,
   loadSession,
 } from "../../Api/api";
+import Header from "../Header/Header";
 import "./EmployeeList.css";
 
 const EmployeeList = () => {
@@ -29,40 +30,38 @@ const EmployeeList = () => {
     }
   };
 
-  if (loading) return <p className="loading">Loading...</p>;
-  if (error) return <p className="error">{error}</p>;
+  if (loading) return <div className="employee-list-container"><Header /><div className="employee-list-card"><p className="loading">Loading...</p></div></div>;
+  if (error) return <div className="employee-list-container"><Header /><div className="employee-list-card"><div className="error-message">{error}</div></div></div>;
 
   return (
-    <div className="container">
-      <h2 className="title">Employee List</h2>
+    <div className="employee-list-container">
+      <Header />
+      <div className="employee-list-card">
+        <h2 className="employee-list-title">Employee List</h2>
 
-      <button className="register-btn" onClick={() => navigate("/register-employee")}>
-        Register new Employee
-      </button>
+        <button className="btn-secondary" onClick={() => navigate("/register-employee")}>
+          + Register new Employee
+        </button>
 
-      {employees.length === 0 ? (
-        <p className="empty">No employees found</p>
-      ) : (
-        <table className="employee-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-
-          <tbody>
+        {employees.length === 0 ? (
+          <p className="empty">No employees found</p>
+        ) : (
+          <div className="employee-grid">
             {employees.map((emp) => (
-              <tr key={emp.user.id}>
-                <td>{emp.user.id}</td>
-                <td>{emp.user.name}</td>
-                <td>{emp.user.email}</td>
-              </tr>
+              <div className="emp-card" key={emp.user.id}>
+                <div className="emp-avatar">
+                  {emp.user.name?.charAt(0).toUpperCase()}
+                </div>
+                <h3 className="emp-name">{emp.user.name}</h3>
+                <p className="emp-email">{emp.user.email}</p>
+                {emp.user.position && (
+                  <span className="emp-role">{emp.user.position}</span>
+                )}
+              </div>
             ))}
-          </tbody>
-        </table>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

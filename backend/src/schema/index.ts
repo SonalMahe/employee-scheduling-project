@@ -2,13 +2,13 @@ import { z } from "zod";
 
 // ── Day of week ───────────────────────────
 export const DayOfWeekSchema = z.enum([
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-  "sunday"
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY"
 ])
 
 // ── Shift type ────────────────────────────
@@ -18,13 +18,20 @@ export const ShiftTypeSchema = z.enum([
   "NIGHT"
 ])
 
+// ── Availability Status ───────────────────
+export const AvailabilityStatusSchema = z.enum([
+  "AVAILABLE",
+  "UNAVAILABLE",
+  "PREFERRED"
+])
+
 // ── Availability ──────────────────────────
 export const UpdateAvailabilitySchema = z.object({
   availabilities: z.array(
     z.object({
       dayOfWeek:  DayOfWeekSchema,
       shiftName:  ShiftTypeSchema,
-      available:  z.boolean()
+      status:     AvailabilityStatusSchema
     })
   ).min(1, "At least one availability entry required")
 })
