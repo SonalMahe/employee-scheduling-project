@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { clearSession, loadSession } from "../../Api/api";
+import { clearSession, loadSession, logout } from "../../Api/api";
 import "./Header.css";
 
 const Header = () => {
@@ -9,9 +9,15 @@ const Header = () => {
   const session = loadSession();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    clearSession();
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      clearSession();
+      navigate("/");
+    }
   };
 
   const navItems =
@@ -19,9 +25,13 @@ const Header = () => {
       ? [
           { label: "Employee List", path: "/employee-list" },
           { label: "Schedule", path: "/schedule" },
+          { label: "Work Schedule", path: "/work-schedule" },
           { label: "Register Employee", path: "/register-employee" },
         ]
-      : [{ label: "My Availability", path: "/availability" }];
+      : [
+          { label: "My Availability", path: "/availability" },
+          { label: "My Schedule", path: "/work-schedule" },
+        ];
 
   return (
     <header className="app-header">

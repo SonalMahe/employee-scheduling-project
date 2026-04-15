@@ -50,5 +50,7 @@ export function errorHandler(
     res.status(err.statusCode).json({ error: err.message });
     return;
   }
-                                                               
+
+  console.error('Unhandled error:', err);
+  res.status(500).json({ error: 'Internal server error' });
 }

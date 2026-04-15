@@ -123,6 +123,19 @@ export async function updateEmployeeService(id: number, input: UpdateInput) {
     throw new Error("Employee not found")
   }
 
+  if (input.loginCode) {
+    const existingLoginCode = await prisma.user.findFirst({
+      where: {
+        loginCode: input.loginCode,
+        id: { not: existing.userId }
+      }
+    })
+
+    if (existingLoginCode) {
+      throw new Error("This login code is already taken")
+    }
+  }
+
   // Update name, loginCode, position on User table
   const updatedUser = await prisma.user.update({
     where: { id: existing.userId },
@@ -136,7 +149,6 @@ export async function updateEmployeeService(id: number, input: UpdateInput) {
   return {
     id:        id,
     name:      updatedUser.name,
-    loginCode: updatedUser.loginCode,
     position:  updatedUser.position,
     role:      updatedUser.role
   }

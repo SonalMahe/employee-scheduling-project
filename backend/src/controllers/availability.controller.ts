@@ -1,12 +1,26 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { UpdateAvailabilitySchema } from '../schema';
-import { getAvailability, updateAvailability } from '../services/availability.service';
+import { getAvailability, updateAvailability, getAvailabilityByShiftDay } from '../services/availability.service';
 import { AppError } from '../middleware/errorHandlerMiddleware';
+
+export async function fetchAvailabilityByShiftDay(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const { dayOfWeek, shiftName } = req.query as { dayOfWeek?: string; shiftName?: string };
+    if (!dayOfWeek || !shiftName) {
+      res.status(400).json({ error: 'dayOfWeek and shiftName are required' });
+      return;
+    }
+    const data = await getAvailabilityByShiftDay(dayOfWeek, shiftName);
+    res.status(200).json(data);
+  } catch (err) {
+    next(err);
+  }
+}
 
 export async function fetchAvailability(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
   try {
-    const employeeId = parseInt(req.params.employeeId);
+    const employeeId = parseInt(req.params.employeeId as string);
     if (isNaN(employeeId)) {
       res.status(400).json({ error: 'Invalid employee ID' });
       return;
