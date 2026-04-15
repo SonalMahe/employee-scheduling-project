@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { loginService, getMeService } from "../services/auth.service"
 import { UserRole } from "../types/user.types"
+import { LoginSchema } from "../schema"
 import "express-session";
 
 
@@ -12,17 +13,11 @@ export async function login(
   req: Request,
   res: Response
 ): Promise<void> {
-  const { email, password } = req.body
-
-  // Basic validation
-  if (!email || !password) {
-    res.status(400).json({ error: "Email and password are required" })
-    return
-  }
-
   try {
+    const input = LoginSchema.parse(req.body)
+
     // Call service — all logic lives there
-    const user = await loginService({ email, password })
+    const user = await loginService(input)
 
     // Save to session
     req.session.user = {
@@ -43,7 +38,8 @@ export async function login(
   } catch (err) {
     // loginService throws "Invalid email or password"
     if (err instanceof Error) {
-      res.status(401).json({ error: err.message })
+      const statusCode = err.name === "ZodError" ? 400 : 401
+      res.status(statusCode).json({ error: err.message })
       return
     }
     res.status(500).json({ error: "Something went wrong" })

@@ -10,6 +10,7 @@ import authRoutes from "./routes/auth.routes"
 import employeeRoutes from "./routes/employees.routes"
 import scheduleRoutes from "./routes/schedule.routes"
 import availabilityRoutes from "./routes/availability.routes"
+import { errorHandler } from "./middleware/errorHandlerMiddleware"
 
 const app = express()
 const PgStore = connectPgSimple(session)
@@ -17,6 +18,10 @@ const PORT = process.env.BACKEND_PORT ?? process.env.PORT ?? 5050
 
 // ── Middleware ─────────────────────────────
 app.use(express.json())
+app.use((req, _res, next) => {
+  console.log(`${req.method} ${req.path}`)
+  next()
+})
 
 app.use(cors({
   origin: "http://localhost:3000", // your frontend URL
@@ -55,6 +60,8 @@ app.use("/api/v1/availability", availabilityRoutes)
 app.get("/", (_req, res) => {
   res.json({ message: "Employee Scheduling API is running ✅" })
 })
+
+app.use(errorHandler)
 
 // ── Start server ───────────────────────────
 app.listen(PORT, () => {

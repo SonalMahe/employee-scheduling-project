@@ -61,3 +61,34 @@ export async function updateAvailability(
 
   return results;
 }
+
+/**
+ * Get all employees' availability for a specific day+shift (employer use).
+ * Returns employees with AVAILABLE or PREFERRED status.
+ */
+export async function getAvailabilityByShiftDay(
+  dayOfWeek: string,
+  shiftName: string
+): Promise<object[]> {
+  const shift = await prisma.shift.findUnique({ where: { name: shiftName } });
+  if (!shift) {
+    throw new AppError(`Unknown shift: ${shiftName}`, 400);
+  }
+
+  return prisma.availability.findMany({
+    where: {
+      dayOfWeek: dayOfWeek as any,
+      shiftId: shift.id,
+      status: { in: ['AVAILABLE', 'PREFERRED'] },
+    },
+    include: {
+      shift: true,
+      employee: {
+        include: {
+          user: { select: { name: true, position: true } },
+        },
+      },
+    },
+    orderBy: { status: 'asc' },
+  });
+}

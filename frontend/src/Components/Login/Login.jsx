@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login, saveSession, loadSession } from '../../Api/api';
+import { login, loadSession } from '../../Api/api';
 import './Login.css';
 
 function Login() {
@@ -35,7 +35,6 @@ function Login() {
     setLoading(true);
     try {
       const user = await login(email, password);
-      saveSession(user);
 
       // Handle remember me
       if (rememberMe) {
@@ -80,13 +79,13 @@ function Login() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Login code</label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              placeholder="Enter your login code"
               required
               disabled={loading}
             />
