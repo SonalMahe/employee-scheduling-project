@@ -8,9 +8,9 @@ const router = Router()
 // POST /auth/login
 router.post("/login", login)
 
-// Protected — must be logged in
+// Public logout — no auth required (allows users to logout even if session is lost)
 // POST /auth/logout
-router.post("/logout", authenticate, logout)
+router.post("/logout", logout)
 
 // Protected — get current user profile
 // GET /auth/me
