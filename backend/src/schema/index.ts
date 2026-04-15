@@ -50,6 +50,16 @@ export const RegisterEmployeeSchema = z.object({
 })
 export type RegisterEmployeeInput = z.infer<typeof RegisterEmployeeSchema>
 
+export const UpdateEmployeeSchema = RegisterEmployeeSchema.pick({
+  name: true,
+  loginCode: true,
+  position: true,
+}).partial().refine(
+  (value) => Object.keys(value).length > 0,
+  "At least one field is required"
+)
+export type UpdateEmployeeInput = z.infer<typeof UpdateEmployeeSchema>
+
 // ── Login ─────────────────────────────────
 export const LoginSchema = z.object({
   email:    z.string().email("Invalid email format"),

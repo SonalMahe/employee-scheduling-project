@@ -100,6 +100,6 @@ model ScheduleEntry {
   employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   shift    Shift    @relation(fields: [shiftId], references: [id])
 
-  // one employee can only be assigned one shift per day
-  @@unique([employeeId, date])
+ // one employee can only be assigned once per shift per day
+  @@unique([employeeId, shiftId, date])
 }

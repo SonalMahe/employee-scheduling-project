@@ -73,19 +73,28 @@ export async function updateSchedule(input: UpdateScheduleInput) {
       throw new AppError(`Employee ${entry.employeeId} not found`, 404)
     }
 
-    // Upsert: update shift if already scheduled that day, else create
-    const scheduleEntry = await prisma.scheduleEntry.upsert({
+    const targetDate = new Date(entry.date)
+
+    // Prevent duplicate: same employee + same shift + same date
+    const alreadyAssigned = await prisma.scheduleEntry.findFirst({
       where: {
-        employeeId_date: {
-          employeeId: entry.employeeId,
-          date: new Date(entry.date)
-        }
-      },
-      update: { shiftId: shift.id },
-      create: {
         employeeId: entry.employeeId,
-        shiftId:    shift.id,
-        date:       new Date(entry.date)
+        shiftId: shift.id,
+        date: targetDate,
+      }
+    })
+
+    if (alreadyAssigned) {
+      // Already assigned — skip silently
+      results.push(alreadyAssigned)
+      continue
+    }
+
+    const scheduleEntry = await prisma.scheduleEntry.create({
+      data: {
+        employeeId: entry.employeeId,
+        shiftId: shift.id,
+        date: targetDate
       }
     })
 

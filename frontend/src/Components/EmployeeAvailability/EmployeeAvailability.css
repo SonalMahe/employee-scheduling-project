@@ -34,6 +34,48 @@
   font-weight: 700;
 }
 
+.work-schedule-section {
+  margin-top: 28px;
+  border-top: 1px solid #e7e7f0;
+  padding-top: 24px;
+}
+
+.work-schedule-title {
+  margin: 0 0 16px 0;
+  color: #333;
+  font-size: 22px;
+}
+
+.work-schedule-list {
+  display: grid;
+  gap: 12px;
+}
+
+.work-schedule-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #f7f8ff;
+  border: 1px solid #e2e6ff;
+}
+
+.work-schedule-date {
+  font-weight: 700;
+  color: #24315d;
+}
+
+.work-schedule-shift {
+  color: #4f5d8c;
+  font-weight: 600;
+}
+
+.work-schedule-empty {
+  color: #666;
+  margin: 0;
+}
+
 /* ============================================================================
    EMPLOYEE AVAILABILITY - TABLE
    ============================================================================ */
@@ -376,6 +418,11 @@
   .availability-table td {
     padding: 8px 5px;
     font-size: 12px;
+  }
+
+  .work-schedule-item {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .choose-btn {

@@ -58,6 +58,11 @@ export const login = async (email, password) => {
   return data;
 };
 
+export const logout = () =>
+  request("/auth/logout", {
+    method: "POST",
+  });
+
 // ================================
 // EMPLOYEES
 // ================================
@@ -79,6 +84,9 @@ export const createEmployee = (payload) =>
 export const getAvailability = (employeeId) =>
   request(`/availability/${employeeId}`);
 
+export const getAvailableEmployees = (dayOfWeek, shiftName) =>
+  request(`/availability?dayOfWeek=${dayOfWeek}&shiftName=${shiftName}`);
+
 export const updateAvailability = (employeeId, payload) =>
   request(`/availability/${employeeId}`, {
     method: "PUT",
@@ -88,8 +96,18 @@ export const updateAvailability = (employeeId, payload) =>
 // ================================
 // SCHEDULE
 // ================================
-export const getSchedule = () =>
-  request("/schedule");
+export const getSchedule = (params = {}) => {
+  const query = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) {
+      query.set(key, value);
+    }
+  });
+
+  const suffix = query.toString();
+  return request(`/schedule${suffix ? `?${suffix}` : ""}`);
+};
 
 export const updateSchedule = (payload) =>
   request("/schedule", {

@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import { RegisterEmployeeSchema, UpdateEmployeeSchema } from "../schema"
 import {
   getAllEmployeesService,
   getEmployeeByIdService,
@@ -64,23 +65,9 @@ export async function registerEmployee(
   req: Request,
   res: Response
 ): Promise<void> {
-  const { name, email, loginCode, position } = req.body
-
-  // Validate required fields
-  if (!name || !email || !loginCode || !position) {
-    res.status(400).json({
-      error: "name, email, loginCode and position are all required"
-    })
-    return
-  }
-
   try {
-    const employee = await registerEmployeeService({
-      name,
-      email,
-      loginCode,
-      position
-    })
+    const input = RegisterEmployeeSchema.parse(req.body)
+    const employee = await registerEmployeeService(input)
 
     res.status(201).json({
       message: "Employee registered successfully",
@@ -90,7 +77,8 @@ export async function registerEmployee(
   } catch (err) {
     console.error("registerEmployee error:", err)
     if (err instanceof Error) {
-      res.status(409).json({ error: err.message })
+      const statusCode = err.name === "ZodError" ? 400 : 409
+      res.status(statusCode).json({ error: err.message })
       return
     }
     res.status(500).json({ error: "Could not register employee" })
@@ -112,14 +100,9 @@ export async function updateEmployee(
     return
   }
 
-  const { name, loginCode, position } = req.body
-
   try {
-    const employee = await updateEmployeeService(id, {
-      name,
-      loginCode,
-      position
-    })
+    const input = UpdateEmployeeSchema.parse(req.body)
+    const employee = await updateEmployeeService(id, input)
 
     res.status(200).json({
       message: "Employee updated successfully",
@@ -129,7 +112,8 @@ export async function updateEmployee(
   } catch (err) {
     console.error("updateEmployee error:", err)
     if (err instanceof Error) {
-      res.status(404).json({ error: err.message })
+      const statusCode = err.name === "ZodError" ? 400 : 404
+      res.status(statusCode).json({ error: err.message })
       return
     }
     res.status(500).json({ error: "Could not update employee" })
