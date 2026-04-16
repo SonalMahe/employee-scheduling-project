@@ -33,7 +33,7 @@ async function seed() {
   // ── Step 3: Create Employees ───────────────────
   // Each one creates a User + linked Employee together
   const employees = [
-    { name: "Cool Admin",    email: "cool.admin@sundsgarden.se",    loginCode: "9999", position: Position.WAITER   },  
+    { name: "Cool Admin",    email: "cool.admin@sundsgarden.se",    loginCode: "9999", position: Position.ADMIN  },  
     { name: "Hanna Persson",    email: "hanna.persson@sundsgarden.se",    loginCode: "2001", position: Position.WAITER },
     { name: "Max Olsson",       email: "max.olsson@sundsgarden.se",       loginCode: "2002", position: Position.RUNNER   },
     { name: "Alia Lindberg",    email: "alia.lindberg@sundsgarden.se",    loginCode: "2003", position: Position.WAITER    },
