@@ -1,7 +1,7 @@
 /* Container */
 .schedule-container {
   padding: 20px;
-  background-color: #f4f6f8;
+  background: transparent;
   min-height: 100vh;
 }
 
@@ -15,6 +15,9 @@
 .select-box {
   margin-bottom: 20px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
 .select-box input {

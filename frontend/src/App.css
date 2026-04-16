@@ -3,8 +3,8 @@
    ============================================================================ */
 
 :root {
-  --primary-color: #667eea;
-  --primary-dark: #764ba2;
+  --primary-color: #8a4190;
+  --primary-dark: #f2ca36;
   --text-primary: #333;
   --text-secondary: #666;
   --text-light: #999;
@@ -14,6 +14,13 @@
   --bg-input-focus: #fafbff;
   --error-bg: #fee;
   --error-text: #c33;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(400deg, #8a4190 0%, #f2ca36 100%);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* ============================================================================
@@ -40,7 +47,11 @@
    ============================================================================ */
 
 .bg-primary-gradient {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(
+    400deg,
+    var(--primary-color) 0%,
+    var(--primary-dark) 100%
+  );
 }
 
 .bg-white {
@@ -69,7 +80,7 @@ select {
   font-size: 14px;
   transition: all 0.3s ease;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: var(--text-primary);
 }
 
@@ -135,7 +146,11 @@ input[type="radio"]:disabled {
 .login-button,
 button:not([class]) {
   padding: 12px 24px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--primary-dark) 100%
+  );
   color: white;
   border: none;
   border-radius: 5px;
@@ -143,7 +158,7 @@ button:not([class]) {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .btn-primary:hover:not(:disabled),
