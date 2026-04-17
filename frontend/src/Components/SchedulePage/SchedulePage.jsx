@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Header from "../Header/Header";
 import { getSchedule, updateSchedule, getEmployees, getAvailableEmployees, loadSession } from "../../Api/api";
 import "./SchedulePage.css";
 
@@ -128,7 +127,6 @@ const SchedulePage = () => {
   if (loading) {
     return (
       <div className="schedule-container">
-        <Header />
         <div className="schedule-card"><p className="loading">Loading...</p></div>
       </div>
     );
@@ -136,7 +134,6 @@ const SchedulePage = () => {
 
   return (
     <div className="schedule-container">
-      <Header />
       <div className="schedule-card">
         <h2 className="schedule-title">{isEmployer ? "Job Schedule" : "My Work Schedule"}</h2>
 
