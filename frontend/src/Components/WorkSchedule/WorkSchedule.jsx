@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import Header from "../Header/Header";
 import { getSchedule, loadSession } from "../../Api/api";
 import "./WorkSchedule.css";
 
@@ -111,7 +110,6 @@ const WorkSchedule = () => {
 
   return (
     <div className="work-sched-container">
-      <Header />
       <div className="work-sched-card">
         <h2 className="work-sched-title">{isEmployer ? "Work Schedule" : "My Work Schedule"}</h2>
 

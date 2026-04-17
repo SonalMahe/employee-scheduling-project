@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { login, loadSession } from '../../Api/api';
-import './Login.css';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { login, saveSession, loadSession } from "../../Api/api";
+import logo from "../../assets/image/resturantLogo.png";
+import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState('');
+  const [selectedRole, setSelectedRole] = useState("EMPLOYER");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // Skip login if already logged in
@@ -21,7 +23,7 @@ function Login() {
 
   // Load saved email on component mount
   useEffect(() => {
-    const savedEmail = localStorage.getItem('rememberMe_email');
+    const savedEmail = localStorage.getItem("rememberMe_email");
     if (savedEmail) {
       setEmail(savedEmail);
       setRememberMe(true);
@@ -31,21 +33,27 @@ function Login() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
     try {
+      if (!selectedRole) {
+        setError("Please choose Employer or Employee before signing in.");
+        setLoading(false);
+        return;
+      }
+
       const user = await login(email, password);
 
       // Handle remember me
       if (rememberMe) {
-        localStorage.setItem('rememberMe_email', email);
+        localStorage.setItem("rememberMe_email", email);
       } else {
-        localStorage.removeItem('rememberMe_email');
+        localStorage.removeItem("rememberMe_email");
       }
 
-      setEmail('');
-      setPassword('');
-      
+      setEmail("");
+      setPassword("");
+
       navigate(user.role === "EMPLOYER" ? "/employee-list" : "/availability");
     } catch (err) {
       setError(err.message);
@@ -58,11 +66,29 @@ function Login() {
     <div className="login-container">
       <div className="login-card">
         <div className="header-section">
-          <h2 className="header-title">Sundsgården</h2>
-          <p className="header-subtitle">Hotell & Konferens</p>
+          <img src={logo} alt="Sundsgården Logo" className="login-logo" />
+          <h2 className="header-title">Shift & Serve</h2>
+          <p className="header-subtitle">Food & Drinks</p>
         </div>
-        <h1 className="login-title">Employee Scheduling System</h1>
+        <h1 className="login-title">Welcome to Shift & Serve!</h1>
         <p className="login-subtitle">Login into your account</p>
+
+        <div className="role-selector">
+          <button
+            type="button"
+            className={`role-button ${selectedRole === "EMPLOYER" ? "active" : ""}`}
+            onClick={() => setSelectedRole("EMPLOYER")}
+          >
+            Employer
+          </button>
+          <button
+            type="button"
+            className={`role-button ${selectedRole === "EMPLOYEE" ? "active" : ""}`}
+            onClick={() => setSelectedRole("EMPLOYEE")}
+          >
+            Employee
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
@@ -104,12 +130,8 @@ function Login() {
 
           {error && <div className="error-message">{error}</div>}
 
-          <button
-            type="submit"
-            className="login-button"
-            disabled={loading}
-          >
-            {loading ? 'Logging in...' : 'Login'}
+          <button type="submit" className="login-button" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
