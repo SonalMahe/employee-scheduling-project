@@ -62,7 +62,16 @@ export type UpdateEmployeeInput = z.infer<typeof UpdateEmployeeSchema>
 
 // ── Login ─────────────────────────────────
 export const LoginSchema = z.object({
-  email:    z.string().email("Invalid email format"),
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .trim()
+    .toLowerCase()
+    .email("Invalid email format — must look like name@example.com")
+    .refine(
+      (val) => /\.[a-zA-Z]{2,}$/.test(val),
+      "Email must include a valid domain ending (e.g. .com, .net, .org)"
+    ),
   password: z.string().min(1, "Password is required")
 })
 export type LoginInput = z.infer<typeof LoginSchema>

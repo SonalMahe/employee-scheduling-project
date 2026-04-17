@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import { z } from "zod"
 import { loginService, getMeService } from "../services/auth.service"
 import { UserRole } from "../types/user.types"
 import { LoginSchema } from "../schema"
@@ -40,10 +41,15 @@ export async function login(
 
   } catch (err) {
     // loginService throws "Invalid email or password"
+    if (err instanceof z.ZodError) {
+      const message = err.issues[0]?.message ?? "Invalid input"
+      logger.warn('Login validation failed', { error: message, email: req.body?.email })
+      res.status(400).json({ error: message })
+      return
+    }
     if (err instanceof Error) {
       logger.warn('Login failed', { error: err.message, email: req.body?.email })
-      const statusCode = err.name === "ZodError" ? 400 : 401
-      res.status(statusCode).json({ error: err.message })
+      res.status(401).json({ error: err.message })
       return
     }
     logger.error('Unexpected login error')
