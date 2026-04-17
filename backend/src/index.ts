@@ -1,11 +1,10 @@
 // src/index.ts
 
-import "dotenv/config"
+//import "dotenv/config"
 import express from "express"
 import session from "express-session"
 import connectPgSimple from "connect-pg-simple"
 import cors from "cors"
-
 import authRoutes from "./routes/auth.routes"
 import employeeRoutes from "./routes/employees.routes"
 import scheduleRoutes from "./routes/schedule.routes"
