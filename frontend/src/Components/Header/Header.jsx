@@ -34,8 +34,7 @@ const Header = () => {
         ];
 
   return (
-    <header className="app-header">
-
+    <header>
       <div className="header-right">
         <button className="logout-btn" onClick={handleLogout}>
           Logout

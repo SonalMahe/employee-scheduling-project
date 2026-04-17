@@ -4,7 +4,6 @@ import {
   getEmployees,
   loadSession,
 } from "../../Api/api";
-import Header from "../Header/Header";
 import "./EmployeeList.css";
 
 const EmployeeList = () => {
@@ -30,12 +29,11 @@ const EmployeeList = () => {
     }
   };
 
-  if (loading) return <div className="employee-list-container"><Header /><div className="employee-list-card"><p className="loading">Loading...</p></div></div>;
-  if (error) return <div className="employee-list-container"><Header /><div className="employee-list-card"><div className="error-message">{error}</div></div></div>;
+  if (loading) return <div className="employee-list-container"><div className="employee-list-card"><p className="loading">Loading...</p></div></div>;
+  if (error) return <div className="employee-list-container"><div className="employee-list-card"><div className="error-message">{error}</div></div></div>;
 
   return (
     <div className="employee-list-container">
-      <Header />
       <div className="employee-list-card">
         <h2 className="employee-list-title">Employee List</h2>
 

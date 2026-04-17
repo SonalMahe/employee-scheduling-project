@@ -5,7 +5,6 @@ import {
   loadSession,
 } from "../../Api/api";
 import "./EmployeeAvailability.css";
-import Header from "../Header/Header";
 
 // Map day index (0=Sun) to backend enum value
 const DAY_ENUM = {
@@ -137,7 +136,6 @@ const EmployeeAvailability = () => {
 
   return (
     <div className="availability-container">
-      <Header />
       <div className="availability-card">
         <h2 className="availability-title">My Availability</h2>
 
