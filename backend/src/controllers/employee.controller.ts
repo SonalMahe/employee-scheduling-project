@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import { RegisterEmployeeSchema, UpdateEmployeeSchema } from "../schema"
 import {
   getAllEmployeesService,
   getEmployeeByIdService,
@@ -7,7 +8,8 @@ import {
   deleteEmployeeService,
   getMyProfileService
 } from "../services/employee.service"
-import "express-session";
+import "express-session"
+import logger from "../utils/logger"
 
 // ─────────────────────────────────────────
 // GET ALL EMPLOYEES
@@ -18,11 +20,13 @@ export async function listEmployees(
   res: Response
 ): Promise<void> {
   try {
+    logger.info('Fetching all employees')
     const employees = await getAllEmployeesService()
+    logger.info('Fetched employees', { count: employees.length })
     res.status(200).json(employees)
 
   } catch (err) {
-    console.error("listEmployees error:", err)
+    logger.error("listEmployees error", { error: String(err) })
     res.status(500).json({ error: "Could not fetch employees" })
   }
 }
@@ -37,17 +41,20 @@ export async function getEmployee(
 ): Promise<void> {
   try {
     const id = parseInt(req.params.id as string)
+    logger.info('Fetching employee', { employeeId: id })
 
     if (isNaN(id)) {
+      logger.warn('Invalid employee ID provided', { id: req.params.id })
       res.status(400).json({ error: "Invalid employee ID" })
       return
     }
 
     const employee = await getEmployeeByIdService(id)
+    logger.info('Employee fetched', { employeeId: id })
     res.status(200).json(employee)
 
   } catch (err) {
-    console.error("getEmployee error:", err)
+    logger.error("getEmployee error", { employeeId: req.params.id, error: String(err) })
     if (err instanceof Error) {
       res.status(404).json({ error: err.message })
       return
@@ -64,35 +71,25 @@ export async function registerEmployee(
   req: Request,
   res: Response
 ): Promise<void> {
-  const { name, email, loginCode, position } = req.body
-
-  // Validate required fields
-  if (!name || !email || !loginCode || !position) {
-    res.status(400).json({
-      error: "name, email, loginCode and position are all required"
-    })
-    return
-  }
-
   try {
-    const employee = await registerEmployeeService({
-      name,
-      email,
-      loginCode,
-      position
-    })
+    logger.info('Employee registration attempt', { email: req.body?.email })
+    const input = RegisterEmployeeSchema.parse(req.body)
+    const employee = await registerEmployeeService(input)
 
+    logger.info('Employee registered successfully', { employeeId: employee.id, email: employee.email })
     res.status(201).json({
       message: "Employee registered successfully",
       employee
     })
 
   } catch (err) {
-    console.error("registerEmployee error:", err)
+    logger.warn("Employee registration error", { email: req.body?.email, error: String(err) })
     if (err instanceof Error) {
-      res.status(409).json({ error: err.message })
+      const statusCode = err.name === "ZodError" ? 400 : 409
+      res.status(statusCode).json({ error: err.message })
       return
     }
+    logger.error("Unexpected registration error")
     res.status(500).json({ error: "Could not register employee" })
   }
 }
@@ -106,32 +103,32 @@ export async function updateEmployee(
   res: Response
 ): Promise<void> {
   const id = parseInt(req.params.id as string)
+  logger.info('Updating employee', { employeeId: id })
 
   if (isNaN(id)) {
+    logger.warn('Invalid employee ID for update', { id: req.params.id })
     res.status(400).json({ error: "Invalid employee ID" })
     return
   }
 
-  const { name, loginCode, position } = req.body
-
   try {
-    const employee = await updateEmployeeService(id, {
-      name,
-      loginCode,
-      position
-    })
+    const input = UpdateEmployeeSchema.parse(req.body)
+    const employee = await updateEmployeeService(id, input)
 
+    logger.info('Employee updated successfully', { employeeId: id })
     res.status(200).json({
       message: "Employee updated successfully",
       employee
     })
 
   } catch (err) {
-    console.error("updateEmployee error:", err)
+    logger.warn("updateEmployee error", { employeeId: id, error: String(err) })
     if (err instanceof Error) {
-      res.status(404).json({ error: err.message })
+      const statusCode = err.name === "ZodError" ? 400 : 404
+      res.status(statusCode).json({ error: err.message })
       return
     }
+    logger.error("Unexpected update error")
     res.status(500).json({ error: "Could not update employee" })
   }
 }
@@ -145,18 +142,21 @@ export async function deleteEmployee(
   res: Response
 ): Promise<void> {
   const id = parseInt(req.params.id as string)
+  logger.info('Deleting employee', { employeeId: id })
 
   if (isNaN(id)) {
+    logger.warn('Invalid employee ID for deletion', { id: req.params.id })
     res.status(400).json({ error: "Invalid employee ID" })
     return
   }
 
   try {
     await deleteEmployeeService(id)
+    logger.info('Employee deleted successfully', { employeeId: id })
     res.status(200).json({ message: "Employee deleted successfully" })
 
   } catch (err) {
-    console.error("deleteEmployee error:", err)
+    logger.error("deleteEmployee error", { employeeId: id, error: String(err) })
     if (err instanceof Error) {
       res.status(404).json({ error: err.message })
       return
@@ -175,17 +175,20 @@ export async function getMyProfile(
 ): Promise<void> {
   try {
     const employeeId = req.session.user?.employeeId
+    logger.info('Fetching employee profile', { employeeId })
 
     if (!employeeId) {
+      logger.warn('Employee profile not found - no employee ID in session')
       res.status(404).json({ error: "Employee profile not found" })
       return
     }
 
     const employee = await getMyProfileService(employeeId)
+    logger.info('Profile fetched successfully', { employeeId })
     res.status(200).json(employee)
 
   } catch (err) {
-    console.error("getMyProfile error:", err)
+    logger.error("getMyProfile error", { employeeId: req.session.user?.employeeId, error: String(err) })
     if (err instanceof Error) {
       res.status(404).json({ error: err.message })
       return

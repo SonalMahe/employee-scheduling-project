@@ -2,13 +2,13 @@ import { z } from "zod";
 
 // ── Day of week ───────────────────────────
 export const DayOfWeekSchema = z.enum([
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-  "sunday"
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY"
 ])
 
 // ── Shift type ────────────────────────────
@@ -18,13 +18,20 @@ export const ShiftTypeSchema = z.enum([
   "NIGHT"
 ])
 
+// ── Availability Status ───────────────────
+export const AvailabilityStatusSchema = z.enum([
+  "AVAILABLE",
+  "UNAVAILABLE",
+  "PREFERRED"
+])
+
 // ── Availability ──────────────────────────
 export const UpdateAvailabilitySchema = z.object({
   availabilities: z.array(
     z.object({
       dayOfWeek:  DayOfWeekSchema,
       shiftName:  ShiftTypeSchema,
-      available:  z.boolean()
+      status:     AvailabilityStatusSchema
     })
   ).min(1, "At least one availability entry required")
 })
@@ -42,6 +49,16 @@ export const RegisterEmployeeSchema = z.object({
   position:  z.enum(["WAITER", "RUNNER", "HEAD_WAITER", "CHEF", "ADMIN"])
 })
 export type RegisterEmployeeInput = z.infer<typeof RegisterEmployeeSchema>
+
+export const UpdateEmployeeSchema = RegisterEmployeeSchema.pick({
+  name: true,
+  loginCode: true,
+  position: true,
+}).partial().refine(
+  (value) => Object.keys(value).length > 0,
+  "At least one field is required"
+)
+export type UpdateEmployeeInput = z.infer<typeof UpdateEmployeeSchema>
 
 // ── Login ─────────────────────────────────
 export const LoginSchema = z.object({

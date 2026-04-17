@@ -11,6 +11,7 @@
  */
 import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
+import logger from '../utils/logger';
 
 // Custom error class so we can throw errors with status codes
 export class AppError extends Error {
@@ -38,6 +39,7 @@ export function errorHandler(
       const field = issue.path.join('.') || 'input';
       fieldErrors[field] = issue.message;
     }
+    logger.warn('Validation error', { fields: fieldErrors });
     res.status(400).json({
       error: 'Validation failed',
       fields: fieldErrors,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
@@ -47,8 +49,11 @@ export function errorHandler(
 
   // Our custom application errors
   if (err instanceof AppError) {
+    logger.warn(`Application error: ${err.message}`, { statusCode: err.statusCode });
     res.status(err.statusCode).json({ error: err.message });
     return;
   }
-                                                               
+
+  logger.error('Unhandled error:', { error: err.message, stack: err.stack });
+  res.status(500).json({ error: 'Internal server error' });
 }

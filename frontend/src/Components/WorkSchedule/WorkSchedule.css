@@ -1,0 +1,257 @@
+/* ============================================================================
+   WORK SCHEDULE - CONTAINER
+   ============================================================================ */
+
+.work-sched-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0 20px 40px;
+}
+
+/* ============================================================================
+   WORK SCHEDULE - CARD
+   ============================================================================ */
+
+.work-sched-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  padding: 40px;
+  width: 100%;
+  max-width: 1200px;
+  overflow-x: auto;
+}
+
+.work-sched-title {
+  text-align: center;
+  color: #333;
+  margin: 0 0 20px 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* ============================================================================
+   WORK SCHEDULE - WEEK NAVIGATION
+   ============================================================================ */
+
+.week-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding: 12px 16px;
+  background: #f8f9ff;
+  border-radius: 10px;
+  border: 1px solid #e8eaf6;
+  flex-wrap: nowrap;
+}
+
+.week-nav-btn {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  color: #333;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.week-nav-btn:hover {
+  background: #f0f3ff;
+  border-color: #667eea;
+}
+
+.week-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  min-width: 180px;
+  text-align: center;
+  user-select: none;
+}
+
+.week-label:focus {
+  outline: none;
+}
+
+.today-btn {
+  padding: 8px 18px;
+  border: 1px solid #667eea;
+  border-radius: 8px;
+  background: white;
+  color: #667eea;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.today-btn:hover:not(:disabled) {
+  background: #667eea;
+  color: white;
+}
+
+.today-btn:disabled,
+.today-btn-active {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ============================================================================
+   WORK SCHEDULE - TODAY COLUMN HIGHLIGHT
+   ============================================================================ */
+
+.today-col {
+  background-color: rgba(102, 126, 234, 0.08) !important;
+}
+
+th.today-col {
+  background: linear-gradient(135deg, #5568d0 0%, #654098 100%) !important;
+}
+
+.work-sched-empty {
+  text-align: center;
+  color: #666;
+  padding: 40px;
+  font-size: 16px;
+}
+
+/* ============================================================================
+   WORK SCHEDULE - TABLE
+   ============================================================================ */
+
+.work-sched-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  min-width: 700px;
+}
+
+.work-sched-table th,
+.work-sched-table td {
+  padding: 12px 10px;
+  text-align: center;
+  border: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.work-sched-table th {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  padding: 14px 8px;
+}
+
+.work-sched-table th:first-child {
+  border-radius: 8px 0 0 0;
+  width: 160px;
+}
+
+.work-sched-table th:last-child {
+  border-radius: 0 8px 0 0;
+}
+
+.work-sched-table th .day-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.work-sched-table th .day-date {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+/* ============================================================================
+   WORK SCHEDULE - CELLS
+   ============================================================================ */
+
+.emp-name-cell {
+  font-weight: 600;
+  color: #333;
+  background-color: #f8f9ff;
+  text-align: left !important;
+  padding-left: 14px !important;
+}
+
+.ws-cell {
+  transition: background-color 0.2s ease;
+  min-height: 50px;
+}
+
+.ws-cell.ws-assigned {
+  background-color: #e8f5e9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.ws-shift-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #43a047, #2e7d32);
+  color: white;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ws-empty {
+  color: #ccc;
+  font-size: 14px;
+}
+
+/* ============================================================================
+   WORK SCHEDULE - RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .work-sched-card {
+    padding: 20px;
+  }
+
+  .week-nav {
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .week-label {
+    font-size: 14px;
+    min-width: 150px;
+  }
+
+  .work-sched-table th,
+  .work-sched-table td {
+    padding: 8px 5px;
+    font-size: 11px;
+  }
+
+  .ws-shift-badge {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+}

@@ -109,6 +109,139 @@ select:disabled {
   opacity: 0.6;
 }
 
+/* ============================================================================
+   FORM GROUP STYLES
+   ============================================================================ */
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ============================================================================
+   BUTTON STYLES
+   ============================================================================ */
+
+.btn-primary,
+.login-button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-primary:hover,
+.login-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:disabled,
+.login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* ============================================================================
+   MESSAGE STYLES
+   ============================================================================ */
+
+.error-message {
+  background-color: var(--error-bg);
+  color: var(--error-text);
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* ============================================================================
+   SHARED TABLE STYLES
+   ============================================================================ */
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.styled-table th {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.styled-table th:first-child {
+  border-radius: 8px 0 0 0;
+}
+
+.styled-table th:last-child {
+  border-radius: 0 8px 0 0;
+}
+
+.styled-table tbody tr:hover {
+  background-color: #f8f9ff;
+}
+
+.styled-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
 .input-field::placeholder,
 input::placeholder {
   color: #b0b0b0;

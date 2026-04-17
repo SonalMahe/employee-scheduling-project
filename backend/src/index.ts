@@ -10,6 +10,8 @@ import authRoutes from "./routes/auth.routes"
 import employeeRoutes from "./routes/employees.routes"
 import scheduleRoutes from "./routes/schedule.routes"
 import availabilityRoutes from "./routes/availability.routes"
+import { errorHandler } from "./middleware/errorHandlerMiddleware"
+import logger from "./utils/logger"
 
 const app = express()
 const PgStore = connectPgSimple(session)
@@ -17,6 +19,10 @@ const PORT = process.env.BACKEND_PORT ?? process.env.PORT ?? 5050
 
 // ── Middleware ─────────────────────────────
 app.use(express.json())
+app.use((req, _res, next) => {
+  logger.info(`${req.method} ${req.path}`)
+  next()
+})
 
 app.use(cors({
   origin: "http://localhost:3000", // your frontend URL
@@ -56,22 +62,24 @@ app.get("/", (_req, res) => {
   res.json({ message: "Employee Scheduling API is running ✅" })
 })
 
+app.use(errorHandler)
+
 // ── Start server ───────────────────────────
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`)
-  console.log("\nRegistered routes:")
-  console.log("  POST   /api/v1/auth/login")
-  console.log("  POST   /api/v1/auth/logout")
-  console.log("  GET    /api/v1/auth/me")
-  console.log("  GET    /api/v1/employees")
-  console.log("  POST   /api/v1/employees")
-  console.log("  GET    /api/v1/employees/:id")
-  console.log("  PUT    /api/v1/employees/:id")
-  console.log("  DELETE /api/v1/employees/:id")
-  console.log("  GET    /api/v1/employees/me")
-  console.log("  GET    /api/v1/availability/:employeeId")
-  console.log("  PUT    /api/v1/availability/:employeeId")
-  console.log("  GET    /api/v1/schedule")
-  console.log("  PUT    /api/v1/schedule")
-  console.log("  DELETE /api/v1/schedule/:id")
+  logger.info(`Server running on http://localhost:${PORT}`)
+  logger.info("Registered routes:")
+  logger.info("  POST   /api/v1/auth/login")
+  logger.info("  POST   /api/v1/auth/logout")
+  logger.info("  GET    /api/v1/auth/me")
+  logger.info("  GET    /api/v1/employees")
+  logger.info("  POST   /api/v1/employees")
+  logger.info("  GET    /api/v1/employees/:id")
+  logger.info("  PUT    /api/v1/employees/:id")
+  logger.info("  DELETE /api/v1/employees/:id")
+  logger.info("  GET    /api/v1/employees/me")
+  logger.info("  GET    /api/v1/availability/:employeeId")
+  logger.info("  PUT    /api/v1/availability/:employeeId")
+  logger.info("  GET    /api/v1/schedule")
+  logger.info("  PUT    /api/v1/schedule")
+  logger.info("  DELETE /api/v1/schedule/:id")
 })

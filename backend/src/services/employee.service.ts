@@ -1,10 +1,12 @@
 import prisma from "../utils/prisma"
+import logger from "../utils/logger"
 
 // ─────────────────────────────────────────
 // GET ALL EMPLOYEES
 // ─────────────────────────────────────────
 export async function getAllEmployeesService() {
-  return prisma.employee.findMany({
+  logger.info('Fetching all employees from database')
+  const employees = await prisma.employee.findMany({
     include: {
       user: {
         select: {
@@ -20,12 +22,15 @@ export async function getAllEmployeesService() {
     },
     orderBy: { user: { name: "asc" } }
   })
+  logger.info('Fetched all employees', { count: employees.length })
+  return employees
 }
 
 // ─────────────────────────────────────────
 // GET SINGLE EMPLOYEE
 // ─────────────────────────────────────────
 export async function getEmployeeByIdService(id: number) {
+  logger.info('Fetching employee by ID', { employeeId: id })
   const employee = await prisma.employee.findUnique({
     where: { id },
     include: {
@@ -45,9 +50,11 @@ export async function getEmployeeByIdService(id: number) {
   })
 
   if (!employee) {
+    logger.warn('Employee not found', { employeeId: id })
     throw new Error(`Employee with id ${id} not found`)
   }
 
+  logger.info('Employee fetched successfully', { employeeId: id })
   return employee
 }
 
@@ -63,11 +70,13 @@ interface RegisterInput {
 
 export async function registerEmployeeService(input: RegisterInput) {
 
+  logger.info('Attempting to register new employee', { email: input.email, name: input.name })
   // 1. Check email already exists
   const existingEmail = await prisma.user.findUnique({
     where: { email: input.email }
   })
   if (existingEmail) {
+    logger.warn('Registration failed - email already exists', { email: input.email })
     throw new Error("An account with this email already exists")
   }
 
@@ -76,6 +85,7 @@ export async function registerEmployeeService(input: RegisterInput) {
     where: { loginCode: input.loginCode }
   })
   if (existingCode) {
+    logger.warn('Registration failed - login code already taken', { email: input.email })
     throw new Error("This login code is already taken")
   }
 
@@ -96,6 +106,7 @@ export async function registerEmployeeService(input: RegisterInput) {
     }
   })
 
+  logger.info('Employee registered successfully', { employeeId: newUser.employee?.id, email: input.email })
   // 4. Return created employee (never return loginCode!)
   return {
     id:       newUser.employee?.id,
@@ -117,10 +128,26 @@ interface UpdateInput {
 
 export async function updateEmployeeService(id: number, input: UpdateInput) {
 
+  logger.info('Updating employee', { employeeId: id })
   // Check employee exists
   const existing = await prisma.employee.findUnique({ where: { id } })
   if (!existing) {
+    logger.warn('Update failed - employee not found', { employeeId: id })
     throw new Error("Employee not found")
+  }
+
+  if (input.loginCode) {
+    const existingLoginCode = await prisma.user.findFirst({
+      where: {
+        loginCode: input.loginCode,
+        id: { not: existing.userId }
+      }
+    })
+
+    if (existingLoginCode) {
+      logger.warn('Update failed - login code already taken', { employeeId: id })
+      throw new Error("This login code is already taken")
+    }
   }
 
   // Update name, loginCode, position on User table
@@ -133,10 +160,10 @@ export async function updateEmployeeService(id: number, input: UpdateInput) {
     }
   })
 
+  logger.info('Employee updated successfully', { employeeId: id })
   return {
     id:        id,
     name:      updatedUser.name,
-    loginCode: updatedUser.loginCode,
     position:  updatedUser.position,
     role:      updatedUser.role
   }
@@ -147,8 +174,10 @@ export async function updateEmployeeService(id: number, input: UpdateInput) {
 // ─────────────────────────────────────────
 export async function deleteEmployeeService(id: number) {
 
+  logger.info('Deleting employee', { employeeId: id })
   const existing = await prisma.employee.findUnique({ where: { id } })
   if (!existing) {
+    logger.warn('Deletion failed - employee not found', { employeeId: id })
     throw new Error("Employee not found")
   }
 
@@ -156,6 +185,7 @@ export async function deleteEmployeeService(id: number) {
   // then delete User — FK goes Employee → User, so order matters
   await prisma.employee.delete({ where: { id } })
   await prisma.user.delete({ where: { id: existing.userId } })
+  logger.info('Employee deleted successfully', { employeeId: id })
 }
 
 // ─────────────────────────────────────────
@@ -163,6 +193,7 @@ export async function deleteEmployeeService(id: number) {
 // ─────────────────────────────────────────
 export async function getMyProfileService(employeeId: number) {
 
+  logger.info('Fetching employee profile', { employeeId })
   const employee = await prisma.employee.findUnique({
     where: { id: employeeId },
     include: {
@@ -186,8 +217,10 @@ export async function getMyProfileService(employeeId: number) {
   })
 
   if (!employee) {
+    logger.warn('Profile not found', { employeeId })
     throw new Error("Profile not found")
   }
 
+  logger.info('Profile fetched successfully', { employeeId })
   return employee
 }
