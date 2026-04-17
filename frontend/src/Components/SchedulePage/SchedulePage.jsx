@@ -220,17 +220,6 @@ const SchedulePage = () => {
             ) : (
               <div className="avail-list">
                 <p className="avail-heading no-avail">No employees marked availability for this shift.</p>
-                <p className="avail-heading">All employees:</p>
-                {employees.map((emp) => (
-                  <button
-                    key={emp.id}
-                    className={`avail-emp-btn ${selectedEmpId === String(emp.id) ? "selected" : ""}`}
-                    onClick={() => setSelectedEmpId(String(emp.id))}
-                  >
-                    <span className="avail-emp-name">{emp.user.name}</span>
-                    <span className="avail-emp-pos">{emp.user.position || ""}</span>
-                  </button>
-                ))}
               </div>
             )}
 
