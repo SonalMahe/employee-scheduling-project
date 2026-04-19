@@ -43,10 +43,32 @@ export type UpdateAvailabilityInput = z.infer<typeof UpdateAvailabilitySchema>
 
 // ── Register Employee ─────────────────────
 export const RegisterEmployeeSchema = z.object({
-  name:      z.string().min(1, "Name is required"),
-  email:     z.string().email("Invalid email format"),
-  loginCode: z.string().min(1, "Login code is required"),
-  position:  z.enum(["WAITER", "RUNNER", "HEAD_WAITER", "CHEF", "ADMIN"])
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must be 50 characters or fewer")
+    .trim()
+    .regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, "Name can only contain letters, spaces, hyphens, and apostrophes"),
+
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .trim()
+    .toLowerCase()
+    .email("Invalid email format — must look like name@example.com")
+    .max(255, "Email must be 255 characters or fewer")
+    .refine(
+      (val) => /\.[a-zA-Z]{2,}$/.test(val),
+      "Email must include a valid domain ending (e.g. .com, .net, .org)"
+    ),
+
+  loginCode: z
+    .string()
+    .min(4, "Login code must be at least 4 characters")
+    .max(20, "Login code must be 20 characters or fewer")
+    .regex(/^[a-zA-Z0-9]+$/, "Login code can only contain letters and numbers"),
+
+  position: z.enum(["WAITER", "RUNNER", "HEAD_WAITER", "CHEF", "ADMIN"])
 })
 export type RegisterEmployeeInput = z.infer<typeof RegisterEmployeeSchema>
 
