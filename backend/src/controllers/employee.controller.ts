@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import { z } from "zod"
 import { RegisterEmployeeSchema, UpdateEmployeeSchema } from "../schema"
 import {
   getAllEmployeesService,
@@ -84,9 +85,13 @@ export async function registerEmployee(
 
   } catch (err) {
     logger.warn("Employee registration error", { email: req.body?.email, error: String(err) })
+    if (err instanceof z.ZodError) {
+      const message = err.issues[0]?.message ?? "Invalid input"
+      res.status(400).json({ error: message })
+      return
+    }
     if (err instanceof Error) {
-      const statusCode = err.name === "ZodError" ? 400 : 409
-      res.status(statusCode).json({ error: err.message })
+      res.status(409).json({ error: err.message })
       return
     }
     logger.error("Unexpected registration error")
@@ -123,9 +128,13 @@ export async function updateEmployee(
 
   } catch (err) {
     logger.warn("updateEmployee error", { employeeId: id, error: String(err) })
+    if (err instanceof z.ZodError) {
+      const message = err.issues[0]?.message ?? "Invalid input"
+      res.status(400).json({ error: message })
+      return
+    }
     if (err instanceof Error) {
-      const statusCode = err.name === "ZodError" ? 400 : 404
-      res.status(statusCode).json({ error: err.message })
+      res.status(404).json({ error: err.message })
       return
     }
     logger.error("Unexpected update error")
