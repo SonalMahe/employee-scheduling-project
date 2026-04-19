@@ -1,7 +1,6 @@
-
 # SHIFT & SERVE Food n drinks -
 
-A full-stack web application that allows employers to manage staff schedules 
+A full-stack web application that allows employers to manage staff schedules
 and employees to set their availability and view assigned shifts.
 
 Built for the course **API database**.
@@ -11,18 +10,18 @@ This project helps employee to add/change the shift and employer can adjust the 
 
 ## Team Members
 
-| Name | GitHub | Role |
-|------|--------|------|
-| Name 1 | @Sonal | Backend |
-| Name 2 | @Priyanka & Navya | Frontend |
-| Name 3 | @Sonal | Database + API |
-
+| Name   | GitHub            | Role           |
+| ------ | ----------------- | -------------- |
+| Name 1 | @Sonal            | Backend        |
+| Name 2 | @Priyanka & Navya | Frontend       |
+| Name 3 | @Sonal            | Database + API |
 
 ## About the Project
 
-SHIFT & SERVE  allows:
+SHIFT & SERVE allows:
 
 **Employers can:**
+
 - Login with their credentials
 - View all employees and their profiles
 - Register new employees with a login code
@@ -31,6 +30,7 @@ SHIFT & SERVE  allows:
 - See each employee's work schedule
 
 **Employees can:**
+
 - Login with their personal login code
 - Set their availability per shift per day
 - View their own personal work schedule
@@ -41,29 +41,34 @@ SHIFT & SERVE  allows:
 ## Tech Stack
 
 ### Backend
-| Technology | Purpose |
-|-----------|---------|
-| Node.js | Runtime environment |
-| TypeScript | Type safety |
-| Express.js | REST API framework |
-| Prisma | Database ORM |
-| PostgreSQL | Database |
-| Zod | Input validation |
-| express-session | Session-based authentication |
+
+| Technology        | Purpose                      |
+| ----------------- | ---------------------------- | --------------- |
+| Node.js           | Runtime environment          |
+| TypeScript        | Type safety                  |
+| Express.js        | REST API framework           |
+| Prisma            | Database ORM                 |
+| PostgreSQL        | Database                     |
+| Zod               | Input validation             |
+| express-session   | Session-based authentication |
 | connect-pg-simple | Store sessions in PostgreSQL |
-| Winston | Structured logging |(still working)
-| ESLint | Code quality |
+| Winston           | Structured logging           | (still working) |
+| ESLint            | Code quality                 |
 
 ### Frontend
-| Technology | Purpose |
-|-----------|---------|
-| React | UI framework |
-| TypeScript | Type safety |
-| ... | ... |
+
+| Technology       | Purpose                           |
+| ---------------- | --------------------------------- |
+| React            | UI framework                      |
+| TypeScript       | Type safety                       |
+| React Router DOM | Client-side routing               |
+| Create React App | Build tool and development server |
+| CSS              | Styling                           |
 
 ---
 
 ### Project Structure
+
 ```bash
 employee-scheduling-project/
 
@@ -102,7 +107,40 @@ employee-scheduling-project/
 │   ├── tsconfig.json
 │   └── package.json
 ├── frontend/
-│   └── ...
+│   ├── public/
+│   │   └── index.html          ← main HTML template
+│   ├── src/
+│   │   ├── Api/
+│   │   │   └── api.js          ← backend API communication
+│   │   ├── Components/
+│   │   │   ├── EmployeeAvailability/
+│   │   │   │   ├── EmployeeAvailability.css
+│   │   │   │   └── EmployeeAvailability.jsx
+│   │   │   ├── EmployeeList/
+│   │   │   │   ├── EmployeeList.css
+│   │   │   │   └── EmployeeList.jsx
+│   │   │   ├── Header/
+│   │   │   │   ├── Header.css
+│   │   │   │   └── Header.jsx
+│   │   │   ├── Login/
+│   │   │   │   ├── Login.css
+│   │   │   │   └── Login.jsx
+│   │   │   ├── RegisterEmployee/
+│   │   │   │   ├── RegisterEmployee.css
+│   │   │   │   └── RegisterEmployee.jsx
+│   │   │   ├── SchedulePage/
+│   │   │   │   ├── SchedulePage.css
+│   │   │   │   └── SchedulePage.jsx
+│   │   │   └── WorkSchedule/
+│   │   │       ├── WorkSchedule.css
+│   │   │       └── WorkSchedule.jsx
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   ├── index.js
+│   │   └── index.html
+│   ├── package.json
+│   └── tsconfig.json
 ├── .gitignore
 └── README.md
 
@@ -183,3 +221,4 @@ ScheduleEntry
 	BACKEND_PORT=5001 PORT=3001 npm run dev
 - If installation was interrupted, run this from root to reinstall subproject dependencies:
 	npm run setup
+```
