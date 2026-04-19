@@ -10,12 +10,16 @@ export default defineConfig([
 
   js.configs.recommended,
 
-  ...tseslint.configs.recommended,
+
+  ...tseslint.configs.recommendedTypeChecked,
 
   {
     files: ["**/*.ts"],
     languageOptions: {
       globals: globals.node,
+      parserOptions: {
+        project: "./tsconfig.json",
+      },
     },
     rules: {
       // No implicit/unsafe any
