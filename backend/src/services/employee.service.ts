@@ -136,7 +136,6 @@ export async function updateEmployeeService(id: number, input: UpdateInput) {
   return {
     id:        id,
     name:      updatedUser.name,
-    loginCode: updatedUser.loginCode,
     position:  updatedUser.position,
     role:      updatedUser.role
   }
