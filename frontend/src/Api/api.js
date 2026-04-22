@@ -78,6 +78,17 @@ export const createEmployee = (payload) =>
     body: JSON.stringify(payload),
   });
 
+export const updateEmployee = (id, payload) =>
+  request(`/employees/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+
+export const deleteEmployee = (id) =>
+  request(`/employees/${id}`, {
+    method: "DELETE",
+  });
+
 // ================================
 // AVAILABILITY
 // ================================
