@@ -43,7 +43,7 @@ const EmployeeList = () => {
   const confirmDelete = async () => {
     try {
       await deleteEmployee(deleteEmployeeId);
-      setEmployees(employees.filter((emp) => emp.user.id !== deleteEmployeeId));
+      await fetchEmployees();
       setDeleteModalOpen(false);
       setDeleteEmployeeId(null);
     } catch (err) {
@@ -72,14 +72,9 @@ const EmployeeList = () => {
   const handleEditSave = async (id) => {
     try {
       await updateEmployee(id, editData);
-      setEmployees(
-        employees.map((emp) =>
-          emp.user.id === id
-            ? { ...emp, user: { ...emp.user, ...editData } }
-            : emp
-        )
-      );
       setEditingId(null);
+      setEditData({});
+      await fetchEmployees();
     } catch (err) {
       console.error(err);
       setError("Failed to update employee");
