@@ -43,7 +43,7 @@ const EmployeeList = () => {
   const confirmDelete = async () => {
     try {
       await deleteEmployee(deleteEmployeeId);
-      setEmployees(employees.filter((emp) => emp.user.id !== deleteEmployeeId));
+      await fetchEmployees();
       setDeleteModalOpen(false);
       setDeleteEmployeeId(null);
     } catch (err) {
